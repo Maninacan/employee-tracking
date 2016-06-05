@@ -1,0 +1,22 @@
+.employeeModalComponent {
+  width: 100%;
+  #nameBlock {
+    justify-content: space-between;
+    #firstNameInputGroup, #lastNameInputGroup {
+      width: calc(50% - 60px);
+    }
+    #middleInitialInputGroup {
+      width: 120px;
+    }
+  }
+  #positionAndDateHiredBlock {
+    justify-content: space-between;
+    #positionCategoryGroup, #dateHiredGroup {
+      width: calc(50% - 10px);
+    }
+  }
+  span.asterisk:after {
+    color: #a94442;
+    content: "*";
+  }
+}

@@ -42,3 +42,4 @@ jspm_packages
 .idea/
 package.json
 src/app/
+config.json

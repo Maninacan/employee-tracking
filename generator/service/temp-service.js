@@ -1,5 +1,5 @@
 export default function <%= name %>Service() {
-  'ngInject'
+  'ngInject';
 
   function getName() {
     return '<%= name %>';
