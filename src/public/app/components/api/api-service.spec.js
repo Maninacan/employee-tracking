@@ -1,6 +1,6 @@
 import apiService from './api-service';
 
-const should = chai.should();
+chai.should();
 
 describe('apiComponent', () => {
 
