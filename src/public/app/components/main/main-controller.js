@@ -57,7 +57,7 @@ export default function mainController($scope, employeeModalService, apiService)
     employeeModalService.open(self.employees[index], 'delete')
       .then(deleteResult => {
         self.employees = self.employees.filter(currentEmployee => {
-          return currentEmployee !== deleteResult.employee;
+          return deleteResult.employee._id !== currentEmployee._id;
         });
         $scope.$apply();
       })
