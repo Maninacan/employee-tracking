@@ -43,3 +43,4 @@ jspm_packages
 package.json
 src/app/
 config.json
+.env
