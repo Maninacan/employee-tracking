@@ -2,8 +2,6 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-
-
 export default {
   devtool: 'sourcemap',
   entry: ['babel-polyfill', './src/public/app/app.js'],
@@ -18,10 +16,10 @@ export default {
       {test: /\.html$/, loader: 'raw'},
       {test: /\.scss$/, loader: 'style!css!sass'},
       {test: /\.css$/, loader: 'style!css'},
-      { test: /\.(woff|woff2)$/,  loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-      { test: /\.ttf$/,    loader: "file-loader" },
-      { test: /\.eot$/,    loader: "file-loader" },
-      { test: /\.svg$/,    loader: "file-loader" }
+      {test: /\.(woff|woff2)$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
+      {test: /\.ttf$/, loader: 'file-loader'},
+      {test: /\.eot$/, loader: 'file-loader'},
+      {test: /\.svg$/, loader: 'file-loader'}
     ]
   },
   sassLoader: {
@@ -42,4 +40,4 @@ export default {
       minChunks: (module) => module.resource && module.resource.indexOf(path.resolve(__dirname, 'src', 'public')) === -1
     })
   ]
-}
+};

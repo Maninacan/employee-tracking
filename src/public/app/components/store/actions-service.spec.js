@@ -1,13 +1,13 @@
-import storeService from './store-service';
+import actionsService from './actions-service';
 
 chai.should();
 
-describe('roStateComponent', () => {
+describe('reducers', () => {
 
   describe('Service', () => {
     // service specs
     it('has a getState property', () => {
-      const service = storeService();
+      const service = actionsService();
       service.should.have.property('getState');
     });
   });
