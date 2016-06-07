@@ -1,0 +1,168 @@
+<div class="employeeModalComponent" ng-cloak>
+  <div class="modal-header">
+    <h3 class="modal-title">Add employee</h3>
+  </div>
+  <div class="modal-body">
+    <form name="form" novalidate>
+      <div id="nameBlock" class="flex-row">
+        <div id="firstNameInputGroup" class="form-group has-feedback"
+             ng-class="{'has-error': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'has-success': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}">
+          <ng-form name="firstNameFieldForm">
+            <label for="firstNameInput">First Name <span class="asterisk"></span></label>
+            <input type="text" class="form-control" id="firstNameInput" name="firstName" placeholder="First Name"
+                   ng-model="ctrl.employee.firstName" ng-required="true" aria-describedby="firstNameHelpBlock">
+            <span
+              ng-class="{'glyphicon-remove': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'glyphicon-ok': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}"
+              class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <span ng-if="form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched"
+                  id="firstNameHelpBlock" class="help-block">This field is required.</span>
+          </ng-form>
+        </div>
+        <div id="middleInitialInputGroup" class="form-group">
+          <ng-form name="middleInitialFieldForm">
+            <label for="middleInitialInput">Middle Initial</label>
+            <input type="text" class="form-control" id="middleInitialInput" name="middleInitial" placeholder="M.I."
+                   ng-model="ctrl.employee.middleInitial">
+          </ng-form>
+        </div>
+        <div id="lastNameInputGroup" class="form-group has-feedback"
+             ng-class="{'has-error': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'has-success': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}">
+          <ng-form name="lastNameFieldForm">
+            <label for="lastNameInput">Last Name <span class="asterisk"></span></label>
+            <input type="text" class="form-control" id="lastNameInput" name="lastName" placeholder="Last Name"
+                   ng-model="ctrl.employee.lastName" ng-required="true" aria-describedby="lastNameHelpBlock">
+            <span
+              ng-class="{'glyphicon-remove': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'glyphicon-ok': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}"
+              class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <span ng-if="form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched"
+                  id="lastNameHelpBlock" class="help-block">This field is required.</span>
+          </ng-form>
+        </div>
+      </div>
+      <div id="address1InputGroup" class="form-group">
+        <ng-form name="address1FieldForm">
+          <label for="address1Input">Address 1</label>
+          <input type="text" class="form-control" id="address1Input" name="address1" placeholder="Address 1"
+                 ng-model="ctrl.employee.address1">
+        </ng-form>
+      </div>
+      <div id="address2InputGroup" class="form-group">
+        <ng-form name="address2FieldForm">
+          <label for="address2Input">Address 2</label>
+          <input type="text" class="form-control" id="address2Input" name="address2" placeholder="Address 2"
+                 ng-model="ctrl.employee.address2">
+        </ng-form>
+      </div>
+      <div id="cityStateZipBlock" class="flex-row">
+        <div id="cityInputGroup" class="form-group">
+          <ng-form name="cityFieldForm">
+            <label for="cityInput">City</label>
+            <input type="text" class="form-control" id="cityInput" name="city" placeholder="City"
+                   ng-model="ctrl.employee.city">
+          </ng-form>
+        </div>
+        <div id="stateInputGroup" class="form-group">
+          <ng-form name="stateFieldForm">
+            <label for="stateSelect">State</label>
+            <select id="stateSelect" class="form-control" name="state" ng-model="ctrl.employee.state">
+              <option ng-repeat="state in ctrl.usStates">{{state}}</option>
+            </select>
+          </ng-form>
+        </div>
+        <div id="zipCodeInputGroup" class="form-group">
+          <ng-form name="zipCodeFieldForm">
+            <label for="zipCodeInput">Zip Code</label>
+            <input type="number" min="00000" max="99999" class="form-control" id="zipCodeInput" name="zipCode"
+                   placeholder="Zip Code" ng-model="ctrl.employee.zipCode">
+          </ng-form>
+        </div>
+      </div>
+      <div id="emailAndPhoneNumberBlock" class="flex-row">
+        <div id="emailGroup" class="form-group has-feedback"
+             ng-class="{'has-error': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'has-success': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}">
+          <ng-form name="emailAddressFieldForm">
+            <label for="emailInput">Email address <span class="asterisk"></span></label>
+            <input type="email" class="form-control" id="emailInput" name="emailAddress" placeholder="Email"
+                   ng-model="ctrl.employee.emailAddress" ng-required="true" aria-describedby="emailHelpBlock">
+            <span
+              ng-class="{'glyphicon-remove': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'glyphicon-ok': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}"
+              class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <span
+              ng-if="form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched"
+              id="emailHelpBlock" class="help-block">This field is required.</span>
+          </ng-form>
+        </div>
+        <div id="phoneGroup" class="form-group">
+          <ng-form name="phoneNumberFieldForm">
+            <label for="phoneInput">Phone number</label>
+            <input type="tel" class="form-control" id="phoneInput" name="phoneNumber" placeholder="Phone Number"
+                   ng-model="ctrl.employee.phoneNumber">
+          </ng-form>
+        </div>
+      </div>
+      <div id="positionAndDateHiredBlock" class="flex-row">
+        <div id="positionCategoryGroup" class="form-group">
+          <ng-form name="positionCategoryFieldForm">
+            <label for="positionCategorySelect">Position Category</label>
+            <select id="positionCategorySelect" class="form-control" name="positionCategory"
+                    ng-model="ctrl.employee.positionCategory">
+              <option>Indirect</option>
+              <option>Direct</option>
+              <option>Program Manager</option>
+              <option>Director</option>
+              <option>Executive</option>
+            </select>
+          </ng-form>
+        </div>
+        <div id="dateHiredGroup" class="form-group has-feedback"
+             ng-class="{'has-error': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'has-success': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}">
+          <ng-form name="dateHiredFieldForm">
+            <label for="dateHiredInput">Date Hired <span class="asterisk"></span></label>
+            <p class="input-group">
+              <input id="dateHiredInput"
+                     type="text"
+                     class="form-control"
+                     uib-datepicker-popup="{{format}}"
+                     name="dateHired"
+                     ng-model="ctrl.employee.dateHired"
+                     is-open="ctrl.datepicker.open"
+                     datepicker-options="ctrl.datepicker.options"
+                     ng-required="true"
+                     close-text="Close"
+                     alt-input-formats="altInputFormats"
+                     popup-placement=""
+                     aria-describedby="dateHiredHelpBlock"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="ctrl.openDatepicker()">
+                <i class="glyphicon glyphicon-calendar"></i>
+              </button>
+            </span>
+            </p>
+            <span
+              ng-class="{'glyphicon-remove': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'glyphicon-ok': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}"
+              class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <span ng-if="form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched"
+                  id="dateHiredHelpBlock" class="help-block">This field is required.</span>
+          </ng-form>
+        </div>
+      </div>
+      <div>
+        <div class="checkbox">
+          <label for="activeFlagCheckbox">
+            <input type="checkbox" id="activeFlagCheckbox" name="activeFlag" ng-model="ctrl.employee.activeFlag"
+                   ng-required="true">
+            Active Employee? <span class="asterisk"></span>
+          </label>
+        </div>
+      </div>
+      <label>Fields with <span class="asterisk"></span> are required.</label>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ctrl.ok()"
+            ng-disabled="form.$pristine || form.firstNameFieldForm.firstName.$invalid || form.lastNameFieldForm.lastName.$invalid || form.emailAddressFieldForm.emailAddress.$invalid || form.dateHiredFieldForm.dateHired.$invalid">
+      OK
+    </button>
+    <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">Cancel</button>
+  </div>
+</div>

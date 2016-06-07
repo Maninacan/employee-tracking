@@ -24,7 +24,7 @@ $font-family--primary: sans-serif;
 
 @import "reset";
 
-///*********** TWIX ***************
+///*********** BOOTSTRAP ***************/
 @import "../../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../../../../node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css";
 
@@ -39,6 +39,11 @@ $font-family--primary: sans-serif;
 .awesome {
   color: $positive;
   background-color: #111111;
+}
+
+///***** ANGULAR - BOOTSTRAP MAPPINGS ****/
+.ng-invalid-required.ng-touched {
+  //@extend .awesome;
 }
 
 ///******* BASE STYLES *************/

@@ -6,4 +6,15 @@
       padding-right: 5px;
     }
   }
+  table tbody tr td span.glyphicon {
+    padding-right: 5px;
+    &.glyphicon-edit:hover {
+      color: #31708f;
+      cursor: pointer;
+    }
+    &.glyphicon-trash:hover {
+      color: #a94442;
+      cursor: pointer;
+    }
+  }
 }

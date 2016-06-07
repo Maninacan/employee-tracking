@@ -91,9 +91,13 @@ webpackJsonp([0],{
 	
 	var _main2 = _interopRequireDefault(_main);
 	
+	var _telephoneFilter = __webpack_require__(329);
+	
+	var _telephoneFilter2 = _interopRequireDefault(_telephoneFilter);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = angular.module('employeeTracking.components', [_api2.default, _employeeModal2.default, _main2.default]).name;
+	exports.default = angular.module('employeeTracking.components', [_api2.default, _employeeModal2.default, _main2.default, _telephoneFilter2.default]).name;
 
 /***/ },
 
@@ -110,6 +114,10 @@ webpackJsonp([0],{
 	
 	var _employeeModalController2 = _interopRequireDefault(_employeeModalController);
 	
+	var _deleteEmployeeModalController = __webpack_require__(333);
+	
+	var _deleteEmployeeModalController2 = _interopRequireDefault(_deleteEmployeeModalController);
+	
 	var _employeeModalService = __webpack_require__(309);
 	
 	var _employeeModalService2 = _interopRequireDefault(_employeeModalService);
@@ -118,36 +126,65 @@ webpackJsonp([0],{
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = angular.module('employeeTracking.components.employeeModal', []).controller('employeeModalController', _employeeModalController2.default).factory('employeeModalService', _employeeModalService2.default).name;
+	exports.default = angular.module('employeeTracking.components.employeeModal', []).controller('employeeModalController', _employeeModalController2.default).controller('deleteEmployeeModalController', _deleteEmployeeModalController2.default).factory('employeeModalService', _employeeModalService2.default).name;
 
 /***/ },
 
 /***/ 308:
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	employeeModalController.$inject = ["$scope", "$uibModalInstance", "resolveObject"];
+	employeeModalController.$inject = ["$scope", "$uibModalInstance", "resolveObject", "$filter"];
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.default = employeeModalController;
-	function employeeModalController($scope, $uibModalInstance, resolveObject) {
+	
+	var _Employee = __webpack_require__(332);
+	
+	var _Employee2 = _interopRequireDefault(_Employee);
+	
+	var _usStates = __webpack_require__(336);
+	
+	var _usStates2 = _interopRequireDefault(_usStates);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function employeeModalController($scope, $uibModalInstance, resolveObject, $filter) {
 	  'ngInject';
 	
-	  var _this = this;
+	  var self = this,
+	      defaultEmployeeObject = {
+	    activeFlag: true,
+	    address1: '',
+	    address2: '',
+	    city: '',
+	    dateHired: new Date(),
+	    emailAddress: '',
+	    firstName: '',
+	    lastName: '',
+	    middleInitial: '',
+	    phoneNumber: '',
+	    positionCategory: 'Indirect',
+	    state: 'Alabama',
+	    zipCode: null
+	  };
 	
-	  var self = this;
+	  if (resolveObject.employee && resolveObject.employee.dateHired && resolveObject.employee.dateHired.constructor === String) {
+	    resolveObject.employee.dateHired = new Date(resolveObject.employee.dateHired);
+	  }
 	
-	  console.log('resolveObj: ', resolveObject);
-	  self.employee = resolveObject.employee || {};
+	  self.usStates = _usStates2.default.map(function (state) {
+	    return capitalizeFirstLetterOnly(state.name);
+	  });
+	  self.employee = resolveObject.employee || defaultEmployeeObject;
 	  self.datepicker = {
 	    open: false,
 	    options: {
 	      formatYear: 'yy',
-	      maxDate: new Date(2020, 5, 22),
-	      minDate: new Date(),
-	      startingDay: 1,
+	      maxDate: new Date(),
+	      startingDay: 0,
 	      placement: 'bottom-right'
 	    }
 	  };
@@ -155,15 +192,22 @@ webpackJsonp([0],{
 	    firstName: '',
 	    lastName: '',
 	    email: '',
-	    dateHired: '',
-	    activeFlag: ''
+	    dateHired: ''
 	  };
-	  self.employeeForm = null;
 	
 	  self.openDatepicker = openDatepicker;
-	  self.formNotReady = formNotReady;
 	  self.ok = ok;
 	  self.cancel = cancel;
+	
+	  /**
+	   * @function capitalizeFirstLetterOnly
+	   * @param word
+	   * @returns {string}
+	   */
+	  function capitalizeFirstLetterOnly(word) {
+	    var lowercaseWord = word.toLowerCase();
+	    return '' + lowercaseWord.charAt(0).toUpperCase() + lowercaseWord.slice(1);
+	  }
 	
 	  /**
 	   * @function openDatepicker
@@ -173,105 +217,142 @@ webpackJsonp([0],{
 	  }
 	
 	  /**
-	   * @function formNotReady
-	   * @returns {*}
+	   * @function updatePhoneNumberFormat
 	   */
-	  function formNotReady(form) {
-	    if (!self.employeeForm) {
-	      self.employeeForm = form;
-	    }
-	
-	    function firstNameInvalid() {
-	
-	      return true;
-	    }
-	
-	    function lastNameInvalid() {
-	      return false;
-	    }
-	
-	    function emailInvalid() {
-	      return false;
-	    }
-	
-	    function hireDateInvalid() {
-	      return false;
-	    }
-	
-	    function activeFlagInvalid() {
-	      return false;
-	    }
-	
-	    return form.$pristine
-	    /*|| firstNameInvalid()
-	    || lastNameInvalid()
-	    || emailInvalid()
-	    || hireDateInvalid()
-	    || activeFlagInvalid()*/;
+	  function updatePhoneNumberFormat() {
+	    self.employee.phoneNumber = $filter('telephone')(self.employee.phoneNumber, 'format');
 	  }
 	
 	  /**
 	   * @function ok
 	   */
 	  function ok() {
-	    $uibModalInstance.close(self.employee);
+	    var newEmployee = new _Employee2.default(self.employee);
+	    newEmployee.phoneNumber = $filter('telephone')(newEmployee.phoneNumber, 'clean');
+	    newEmployee.activeFlag = !!newEmployee.activeFlag;
+	    $uibModalInstance.close(newEmployee);
 	  }
 	
 	  /**
 	   * @function cancel
 	   */
 	  function cancel() {
-	    console.log('Cancel clicked');
 	    $uibModalInstance.dismiss('cancel');
 	  }
 	
+	  // $scope.$watch(() => self.employeeForm, (fresh, old, scope) => {
+	  //   // console.log('employeeForm: ', fresh);
+	  // }, true);
+	  //
 	  $scope.$watch(function () {
-	    return _this.employeeForm;
-	  }, function (fresh, old) {
-	    console.log('employeeForm: ', fresh);
-	  });
+	    return self.employee;
+	  }, function () {
+	    updatePhoneNumberFormat();
+	  }, true);
 	}
 
 /***/ },
 
 /***/ 309:
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	employeeModalService.$inject = ["$uibModal", "$log"];
+	employeeModalService.$inject = ["$uibModal", "$log", "apiService"];
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.default = employeeModalService;
-	function employeeModalService($uibModal, $log) {
-	  'ngInject';
 	
-	  var template = '\n<div class="employeeModalComponent">\n  <div class="modal-header">\n    <h3 class="modal-title">Add employee</h3>\n  </div>\n  <div class="modal-body">\n    <form name="form" novalidate>\n      <div id="nameBlock" class="flex-row">\n        <div id="firstNameInputGroup" class="form-group" ng-class="ctrl.validationClass.firstName">\n          <label for="firstNameInput">First Name <span class="asterisk"></span></label>\n          <input type="text" class="form-control" id="firstNameInput" name="firstName" placeholder="First Name">\n        </div>\n        <div id="middleInitialInputGroup" class="form-group">\n          <label for="middleInitialInput">Middle Initial</label>\n          <input type="text" class="form-control" id="middleInitialInput" name="middleInitial" placeholder="M.I.">\n        </div>\n        <div id="lastNameInputGroup" class="form-group" ng-class="ctrl.validationClass.lastName">\n          <label for="lastNameInput">Last Name <span class="asterisk"></span></label>\n          <input type="text" class="form-control" id="lastNameInput" name="lastName" placeholder="Last Name">\n        </div>\n      </div>\n      <div class="form-group" ng-class="ctrl.validationClass.email">\n        <label for="emailInput">Email address <span class="asterisk"></span></label>\n        <input type="email" class="form-control" id="emailInput" name="emailAddress" placeholder="Email">\n      </div>\n      <div class="form-group">\n        <label for="phoneInput">Phone number</label>\n        <input type="tel" class="form-control" id="phoneInput" name="phoneNumber" placeholder="Phone Number">\n      </div>\n      <div id="positionAndDateHiredBlock" class="flex-row">\n        <div id="positionCategoryGroup" class="form-group">\n          <label for="">Position Category</label>\n          <select class="form-control" name="positionCategory">\n            <option>Indirect</option>\n            <option>Direct</option>\n            <option>Program Manager</option>\n            <option>Director</option>\n            <option>Executive</option>\n          </select>\n        </div>\n        <div id="dateHiredGroup" class="form-group" ng-class="ctrl.validationClass.dateHired">\n          <label for="dateHiredInput">Date Hired <span class="asterisk"></span></label>\n          <p class="input-group">\n            <input id="dateHiredInput" \n              type="text" \n              class="form-control" \n              uib-datepicker-popup="{{format}}"\n              name="dateHired"\n              ng-model="dt" \n              is-open="ctrl.datepicker.open" \n              datepicker-options="ctrl.datepicker.options" \n              ng-required="true" \n              close-text="Close" \n              alt-input-formats="altInputFormats" \n              popup-placement=""/>\n            <span class="input-group-btn">\n              <button type="button" class="btn btn-default" ng-click="ctrl.openDatepicker()">\n                <i class="glyphicon glyphicon-calendar"></i>\n              </button>\n            </span>\n          </p>\n        </div>\n      </div>\n      <div ng-class="ctrl.validationClass.activeFlag">\n        <div class="checkbox">\n          <label for="activeFlagCheckbox">\n            <input type="checkbox" id="activeFlagCheckbox" name="activeFlag">\n            Active Employee? <span class="asterisk"></span>\n          </label>\n        </div>\n      </div>\n      <label>Fields with <span class="asterisk"></span> are required.</label>\n    </form>\n  </div>\n  <div class="modal-footer">\n    <button class="btn btn-primary" type="button" ng-click="ctrl.ok()" ng-disabled="ctrl.formNotReady(form)">OK</button>\n    <button class="btn btn-warning" type="submit" ng-click="ctrl.cancel()">Cancel</button>\n  </div>    \n</div>\n  ';
+	var _Employee = __webpack_require__(332);
+	
+	var _Employee2 = _interopRequireDefault(_Employee);
+	
+	var _deleteEmployeeModalTemplate = __webpack_require__(334);
+	
+	var _deleteEmployeeModalTemplate2 = _interopRequireDefault(_deleteEmployeeModalTemplate);
+	
+	var _employeeModalTemplate = __webpack_require__(335);
+	
+	var _employeeModalTemplate2 = _interopRequireDefault(_employeeModalTemplate);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function employeeModalService($uibModal, $log, apiService) {
+	  'ngInject';
 	
 	  function open() {
 	    var employee = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var method = arguments.length <= 1 || arguments[1] === undefined ? 'add' : arguments[1];
 	
-	
-	    var modalInstance = $uibModal.open({
-	      animation: true,
-	      template: template,
-	      controller: 'employeeModalController',
-	      controllerAs: 'ctrl',
-	      size: '',
-	      resolve: {
-	        resolveObject: function resolveObject() {
-	          return {
-	            employee: employee
-	          };
+	    return new Promise(function (resolve, reject) {
+	      var config = {
+	        animation: true,
+	        size: '',
+	        controllerAs: 'ctrl',
+	        resolve: {
+	          resolveObject: function resolveObject() {
+	            return {
+	              employee: employee
+	            };
+	          }
 	        }
+	      };
+	      switch (method) {
+	        case 'add':
+	          config.template = _employeeModalTemplate2.default;
+	          config.controller = 'employeeModalController';
+	          break;
+	        case 'edit':
+	          config.template = _employeeModalTemplate2.default;
+	          config.controller = 'employeeModalController';
+	          break;
+	        case 'delete':
+	          config.template = _deleteEmployeeModalTemplate2.default;
+	          config.controller = 'deleteEmployeeModalController';
+	          break;
 	      }
-	    });
+	      var modalInstance = $uibModal.open(config);
 	
-	    modalInstance.result.then(function (employee) {
-	      console.log('employee: ', employee);
-	    }, function () {
-	      $log.info('Modal dismissed at: ' + new Date());
+	      if (method === 'add') {
+	        modalInstance.result.then(okAdd, cancel);
+	      } else if (method === 'edit') {
+	        modalInstance.result.then(okEdit, cancel);
+	      } else if (method === 'delete') {
+	        modalInstance.result.then(okDelete, cancel);
+	      }
+	
+	      function okAdd(employee) {
+	        apiService.addEmployee(employee).then(function (response) {
+	          resolve(response);
+	        }).catch(function (err) {
+	          reject(err);
+	        });
+	      }
+	
+	      function okEdit(employee) {
+	        apiService.editEmployee(employee).then(function (response) {
+	          if (response.nModified === response.n) {
+	            resolve(new _Employee2.default(employee));
+	          } else {
+	            reject(response);
+	          }
+	        }).catch(function (err) {
+	          reject(err);
+	        });
+	      }
+	
+	      function okDelete(employee) {
+	        apiService.deleteEmployee(employee).then(function (response) {
+	          resolve(response);
+	        }).catch(function (err) {
+	          reject(err);
+	        });
+	      }
+	
+	      function cancel() {
+	        $log.info('Modal dismissed at: ' + new Date());
+	      }
 	    });
 	  }
 	
@@ -317,7 +398,7 @@ webpackJsonp([0],{
 	
 	
 	// module
-	exports.push([module.id, ".employeeModalComponent {\n  width: 100%; }\n  .employeeModalComponent #nameBlock {\n    justify-content: space-between; }\n    .employeeModalComponent #nameBlock #firstNameInputGroup, .employeeModalComponent #nameBlock #lastNameInputGroup {\n      width: calc(50% - 60px); }\n    .employeeModalComponent #nameBlock #middleInitialInputGroup {\n      width: 120px; }\n  .employeeModalComponent #positionAndDateHiredBlock {\n    justify-content: space-between; }\n    .employeeModalComponent #positionAndDateHiredBlock #positionCategoryGroup, .employeeModalComponent #positionAndDateHiredBlock #dateHiredGroup {\n      width: calc(50% - 10px); }\n  .employeeModalComponent span.asterisk:after {\n    color: #a94442;\n    content: \"*\"; }\n", ""]);
+	exports.push([module.id, ".employeeModalComponent {\n  width: 100%; }\n  .employeeModalComponent #nameBlock {\n    justify-content: space-between; }\n    .employeeModalComponent #nameBlock #firstNameInputGroup, .employeeModalComponent #nameBlock #lastNameInputGroup {\n      width: calc(50% - 70px); }\n    .employeeModalComponent #nameBlock #middleInitialInputGroup {\n      width: 120px; }\n  .employeeModalComponent #emailAndPhoneNumberBlock, .employeeModalComponent #positionAndDateHiredBlock {\n    justify-content: space-between; }\n    .employeeModalComponent #emailAndPhoneNumberBlock #positionCategoryGroup, .employeeModalComponent #emailAndPhoneNumberBlock #dateHiredGroup, .employeeModalComponent #emailAndPhoneNumberBlock #emailGroup, .employeeModalComponent #emailAndPhoneNumberBlock #phoneGroup, .employeeModalComponent #positionAndDateHiredBlock #positionCategoryGroup, .employeeModalComponent #positionAndDateHiredBlock #dateHiredGroup, .employeeModalComponent #positionAndDateHiredBlock #emailGroup, .employeeModalComponent #positionAndDateHiredBlock #phoneGroup {\n      width: calc(50% - 5px); }\n  .employeeModalComponent #cityStateZipBlock {\n    justify-content: space-between; }\n    .employeeModalComponent #cityStateZipBlock #cityInputGroup, .employeeModalComponent #cityStateZipBlock #stateInputGroup, .employeeModalComponent #cityStateZipBlock #zipCodeInputGroup {\n      width: calc(33% - 5px); }\n  .employeeModalComponent span.asterisk:after {\n    color: #a94442;\n    content: \"*\"; }\n", ""]);
 	
 	// exports
 
@@ -337,17 +418,19 @@ webpackJsonp([0],{
 	
 	var _mainController2 = _interopRequireDefault(_mainController);
 	
+	var _mainTemplate = __webpack_require__(337);
+	
+	var _mainTemplate2 = _interopRequireDefault(_mainTemplate);
+	
 	__webpack_require__(316);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var template = '\n<div class="mainComponent">\n  <h1>Employee Tracking</h1>\n  <div class="panel panel-default">\n    <!-- Default panel contents -->\n    <div class="panel-heading space-between">\n      <div>Employees</div>\n      <button id="add-employee-btn" ng-click="ctrl.addEmployee()" class="btn btn-sm btn-primary flex-row">\n        <span class="glyphicon glyphicon-plus-sign"></span>\n        <div>Add an employee</div>\n      </button>\n    </div>\n    \n    <table class="table table-striped">\n      <thead>\n        <tr>\n          <th>#</th>\n          <th>First Name</th>\n          <th>Last Name</th>\n          <th>Middle Initial</th>\n          <th>Email Address</th>\n          <th>Phone Number</th>\n          <th>Position Category</th>\n          <th>Date Hired</th>\n          <th>Address</th>\n          <th>Active</th>\n          <th></th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr ng-repeat="employee in ctrl.employees">\n          <td><strong>{{ $index + 1}}</strong></td>\n          <td>{{ employee.firstName }}</td>\n          <td>{{ employee.lastName }}</td>\n          <td>{{ employee.middleInitial }}</td>\n          <td>{{ employee.emailAddress }}</td>\n          <td>{{ employee.phoneNumber }}</td>\n          <td>{{ employee.positionCategory }}</td>\n          <td>{{ employee.dateHired | date : \'mediumDate\' }}</td>\n          <td>\n            <div class="flex-column">\n              <div>{{ employee.address1 }}</div>\n              <div>{{ employee.address2 }}</div>\n              <div>{{ employee.city }}, {{ employee.state }}</div>\n              <div>{{ employee.zipCode }}</div>\n            </div>\n          </td>\n          <td>{{ employee.activeFlag }}</td>\n          <td><span class="glyphicon glyphicon-edit" ng-click="ctrl.editEmployee($index)"></span></td>\n         \n        </tr>\n      </tbody>\n    </table>\n  </div>\n</div>\n';
 	
 	exports.default = angular.module('employeeTracking.components.main', []).controller('mainController', _mainController2.default).directive('main', function () {
 	  return {
 	    restrict: 'E',
 	    scope: {},
-	    template: template,
+	    template: _mainTemplate2.default,
 	    bindToController: true,
 	    controller: 'mainController',
 	    controllerAs: 'ctrl'
@@ -357,7 +440,7 @@ webpackJsonp([0],{
 /***/ },
 
 /***/ 315:
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -366,65 +449,68 @@ webpackJsonp([0],{
 	  value: true
 	});
 	exports.default = mainController;
+	
+	var _Employee = __webpack_require__(332);
+	
+	var _Employee2 = _interopRequireDefault(_Employee);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function mainController($scope, employeeModalService, apiService) {
 	  'ngInject';
 	
 	  var self = this;
 	
-	  // self.employees = [{
-	  //   firstName: 'Jonathan', // - Text (*)
-	  //   lastName: 'Aaron', // - Text (*)
-	  //   middleInitial: 'R', // – Text
-	  //   emailAddress: 'jon.r.aaron@gmail.com', // - Text (validate emails only) (*)
-	  //   phoneNumber: '4352790073', // - Text (numbers only)
-	  //   positionCategory: 'Indirect', // - Drop Down (Indirect, Direct, Program Manager, Director, Executive)
-	  //   dateHired: new Date(), // - Date (*)
-	  //   address1: '7602 Ranches Pkwy', // – Text
-	  //   address2: '', // – Text
-	  //   city: 'Eagle Mountain', // – Text
-	  //   state: 'Utah', // - Drop Down
-	  //   zipCode: 84005, // - Number (5-digit only)
-	  //   activeFlag: true // - Boolean(*)
-	  // }, {
-	  //   firstName: 'Ricky', // - Text (*)
-	  //   lastName: 'Harris', // - Text (*)
-	  //   middleInitial: 'W', // – Text
-	  //   emailAddress: 'jon.r.aaron@gmail.com', // - Text (validate emails only) (*)
-	  //   phoneNumber: '4352790073', // - Text (numbers only)
-	  //   positionCategory: 'Indirect', // - Drop Down (Indirect, Direct, Program Manager, Director, Executive)
-	  //   dateHired: new Date(), // - Date (*)
-	  //   address1: '7602 Ranches Pkwy', // – Text
-	  //   address2: '', // – Text
-	  //   city: 'Eagle Mountain', // – Text
-	  //   state: 'Utah', // - Drop Down
-	  //   zipCode: 84005, // - Number (5-digit only)
-	  //   activeFlag: true // - Boolean(*)
-	  // }];
-	
 	  self.employees = [];
 	
 	  self.editEmployee = editEmployee;
+	  self.deleteEmployee = deleteEmployee;
 	  self.addEmployee = addEmployee;
 	
 	  apiService.getAllEmployees().then(function (employees) {
 	    self.employees = employees;
 	    $scope.$apply();
+	  }).catch(function (err) {
+	    throw Error(err);
 	  });
+	
+	  /**
+	   * @function addEmployee
+	   */
+	  function addEmployee() {
+	    employeeModalService.open(null, 'add').then(function (employee) {
+	      self.employees.push(employee);
+	      $scope.$apply();
+	    }).catch(function (err) {
+	      throw Error(err);
+	    });
+	  }
 	
 	  /**
 	   * @function editEmployee
 	   * @param index
 	   */
 	  function editEmployee(index) {
-	    console.log('Editing: ', self.employees[index]);
+	    employeeModalService.open(new _Employee2.default(self.employees[index]), 'edit').then(function (employee) {
+	      self.employees[index] = employee;
+	      $scope.$apply();
+	    }).catch(function (err) {
+	      throw Error(err);
+	    });
 	  }
 	
 	  /**
-	   * @function addEmployee
+	   * @function deleteEmployee
+	   * @param index
 	   */
-	  function addEmployee() {
-	    console.log('Adding an employee');
-	    employeeModalService.open();
+	  function deleteEmployee(index) {
+	    employeeModalService.open(self.employees[index], 'delete').then(function (deleteResult) {
+	      self.employees = self.employees.filter(function (currentEmployee) {
+	        return currentEmployee !== deleteResult.employee;
+	      });
+	    }).catch(function (err) {
+	      throw Error(err);
+	    });
 	  }
 	}
 
@@ -465,7 +551,7 @@ webpackJsonp([0],{
 	
 	
 	// module
-	exports.push([module.id, ".mainComponent #add-employee-btn .glyphicon {\n  position: relative;\n  top: 3px;\n  padding-right: 5px; }\n", ""]);
+	exports.push([module.id, ".mainComponent #add-employee-btn .glyphicon {\n  position: relative;\n  top: 3px;\n  padding-right: 5px; }\n\n.mainComponent table tbody tr td span.glyphicon {\n  padding-right: 5px; }\n  .mainComponent table tbody tr td span.glyphicon.glyphicon-edit:hover {\n    color: #31708f;\n    cursor: pointer; }\n  .mainComponent table tbody tr td span.glyphicon.glyphicon-trash:hover {\n    color: #a94442;\n    cursor: pointer; }\n", ""]);
 	
 	// exports
 
@@ -535,7 +621,7 @@ webpackJsonp([0],{
 /***/ },
 
 /***/ 328:
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -544,6 +630,13 @@ webpackJsonp([0],{
 	  value: true
 	});
 	exports.default = apiService;
+	
+	var _Employee = __webpack_require__(332);
+	
+	var _Employee2 = _interopRequireDefault(_Employee);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function apiService($http) {
 	  'ngInject';
 	
@@ -555,17 +648,305 @@ webpackJsonp([0],{
 	  function getAllEmployees() {
 	    return new Promise(function (resolve, reject) {
 	      $http.get('/api/employee').then(function (response) {
+	        var employees = response.data.map(function (employee) {
+	          employee.dateHired = new Date(employee.dateHired);
+	          return new _Employee2.default(employee);
+	        });
+	        resolve(employees);
+	      }).catch(function (err) {
+	        reject(err);
+	      });
+	    });
+	  }
+	
+	  function addEmployee(employee) {
+	    employee = new _Employee2.default(employee);
+	    return new Promise(function (resolve, reject) {
+	      $http.post('/api/employee', employee).then(function (response) {
 	        resolve(response.data);
 	      }).catch(function (err) {
-	        throw Error(err);
+	        reject(err);
+	      });
+	    });
+	  }
+	
+	  function editEmployee(employee) {
+	    return new Promise(function (resolve, reject) {
+	      $http.put('/api/employee/' + employee._id, employee).then(function (response) {
+	        resolve(response.data);
+	      }).catch(function (err) {
+	        reject(err);
+	      });
+	    });
+	  }
+	
+	  function deleteEmployee(employee) {
+	    return new Promise(function (resolve, reject) {
+	      $http.delete('/api/employee/' + employee._id).then(function (response) {
+	        resolve(response.data);
+	      }).catch(function (err) {
+	        reject(err);
 	      });
 	    });
 	  }
 	
 	  return {
-	    getAllEmployees: getAllEmployees
+	    getAllEmployees: getAllEmployees,
+	    addEmployee: addEmployee,
+	    editEmployee: editEmployee,
+	    deleteEmployee: deleteEmployee
 	  };
 	}
+
+/***/ },
+
+/***/ 329:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _telephoneFilter = __webpack_require__(330);
+	
+	var _telephoneFilter2 = _interopRequireDefault(_telephoneFilter);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = angular.module('roApp.components.telephoneFilter', []).filter('telephone', _telephoneFilter2.default).name;
+
+/***/ },
+
+/***/ 330:
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = telephoneFilterService;
+	// Author found here: https://github.com/benjamincharity/angular-telephone-filter
+	
+	function telephoneFilterService() {
+	  'ngInject';
+	
+	  /**
+	   * Clean or format a telephone number
+	   * @function filter
+	   * @param {String} tel
+	   * @param {String} method
+	   * @return {String} finalNumber
+	   */
+	
+	  function phoneFilter(tel, method) {
+	    var maxLength = 10;
+	    var cityCodeLength = 3;
+	    var numberLength = 7;
+	    var longDistanceCode = void 0;
+	
+	    // Return if no number was passed in
+	    if (!tel) {
+	      return '';
+	    }
+	
+	    // Strip all non-numeric characters
+	    var value = tel.toString().trim().replace(/\D/g, '');
+	
+	    // Trim to verify the model doesn't get any larger
+	    if (value.length > maxLength) {
+	
+	      // If the first character is a US country code
+	      if (value.charAt(0) === '1') {
+	        // Save the code
+	        longDistanceCode = value.charAt(0);
+	
+	        // Don't strip it, allow 11 digits
+	        value = value.substring(1, maxLength + 1);
+	      } else {
+	        value = value.substring(0, maxLength);
+	      }
+	    }
+	
+	    // Return if no method was passed in
+	    if (!method) {
+	      return 'A method{string} is required. e.g. \'clean\' or \'format\'';
+	    }
+	
+	    //
+	    // Clean a phone number
+	    if (method === 'clean') {
+	      return value;
+	    }
+	
+	    //
+	    // Format a phone number
+	    if (method === 'format') {
+	
+	      var city = void 0;
+	      var number = void 0;
+	
+	      switch (value.length) {
+	        case 1:
+	        case 2:
+	        case 3:
+	          city = value;
+	          break;
+	
+	        default:
+	          city = value.slice(0, cityCodeLength);
+	          number = value.slice(cityCodeLength);
+	      }
+	
+	      if (number) {
+	
+	        if (number.length > cityCodeLength) {
+	
+	          number = number.slice(0, cityCodeLength) + '-' + number.slice(cityCodeLength, numberLength);
+	        }
+	
+	        return (longDistanceCode ? longDistanceCode + ' ' : '') + ('(' + city + ') ' + number).trim();
+	      } else {
+	
+	        return '(' + city;
+	      }
+	    }
+	  }
+	
+	  return phoneFilter;
+	}
+
+/***/ },
+
+/***/ 332:
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Employee = function Employee(obj) {
+	  _classCallCheck(this, Employee);
+	
+	  this._id = obj._id;
+	
+	  if (obj.firstName) {
+	    this.firstName = obj.firstName;
+	  } else {
+	    throw Error('"firstName" is required');
+	  }
+	
+	  if (obj.lastName) {
+	    this.lastName = obj.lastName;
+	  } else {
+	    throw Error('"lastName" is required');
+	  }
+	
+	  this.middleInitial = obj.middleInitial;
+	
+	  if (obj.emailAddress) {
+	    this.emailAddress = obj.emailAddress;
+	  } else {
+	    throw Error('"emailAddress" is required');
+	  }
+	
+	  this.phoneNumber = obj.phoneNumber;
+	  this.positionCategory = obj.positionCategory;
+	
+	  if (obj.dateHired) {
+	    this.dateHired = obj.dateHired;
+	  } else {
+	    throw Error('"dateHired" is required');
+	  }
+	
+	  this.address1 = obj.address1;
+	  this.address2 = obj.address2;
+	  this.city = obj.city;
+	  this.state = obj.state;
+	  this.zipCode = obj.zipCode;
+	
+	  this.activeFlag = !!obj.activeFlag;
+	};
+	
+	exports.default = Employee;
+
+/***/ },
+
+/***/ 333:
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	deleteEmployeeModalController.$inject = ["$scope", "$uibModalInstance", "resolveObject"];
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = deleteEmployeeModalController;
+	function deleteEmployeeModalController($scope, $uibModalInstance, resolveObject) {
+	  'ngInject';
+	
+	  var self = this;
+	
+	  self.employee = resolveObject.employee;
+	
+	  self.ok = ok;
+	  self.cancel = cancel;
+	
+	  /**
+	   * @function ok
+	   */
+	  function ok() {
+	    // console.log('submitted: ', self.employee);
+	    $uibModalInstance.close(self.employee);
+	  }
+	
+	  /**
+	   * @function cancel
+	   */
+	  function cancel() {
+	    // console.log('Cancel clicked');
+	    $uibModalInstance.dismiss('cancel');
+	  }
+	}
+
+/***/ },
+
+/***/ 334:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"employeeModalComponent\" ng-cloak>\n  <div class=\"modal-header\">\n    <h3 class=\"modal-title\">Add employee</h3>\n  </div>\n  <div class=\"modal-body\">\n    <uib-alert type=\"danger\">Are you sure you want to delete the record for {{ctrl.employee.firstName}}?</uib-alert>\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ctrl.cancel()\">No. Don't delete it.</button>\n    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"ctrl.ok()\">Yes. Delete it.</button>\n  </div>\n</div>"
+
+/***/ },
+
+/***/ 335:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"employeeModalComponent\" ng-cloak>\n  <div class=\"modal-header\">\n    <h3 class=\"modal-title\">Add employee</h3>\n  </div>\n  <div class=\"modal-body\">\n    <form name=\"form\" novalidate>\n      <div id=\"nameBlock\" class=\"flex-row\">\n        <div id=\"firstNameInputGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'has-success': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}\">\n          <ng-form name=\"firstNameFieldForm\">\n            <label for=\"firstNameInput\">First Name <span class=\"asterisk\"></span></label>\n            <input type=\"text\" class=\"form-control\" id=\"firstNameInput\" name=\"firstName\" placeholder=\"First Name\"\n                   ng-model=\"ctrl.employee.firstName\" ng-required=\"true\" aria-describedby=\"firstNameHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'glyphicon-ok': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched\"\n                  id=\"firstNameHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n        <div id=\"middleInitialInputGroup\" class=\"form-group\">\n          <ng-form name=\"middleInitialFieldForm\">\n            <label for=\"middleInitialInput\">Middle Initial</label>\n            <input type=\"text\" class=\"form-control\" id=\"middleInitialInput\" name=\"middleInitial\" placeholder=\"M.I.\"\n                   ng-model=\"ctrl.employee.middleInitial\">\n          </ng-form>\n        </div>\n        <div id=\"lastNameInputGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'has-success': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}\">\n          <ng-form name=\"lastNameFieldForm\">\n            <label for=\"lastNameInput\">Last Name <span class=\"asterisk\"></span></label>\n            <input type=\"text\" class=\"form-control\" id=\"lastNameInput\" name=\"lastName\" placeholder=\"Last Name\"\n                   ng-model=\"ctrl.employee.lastName\" ng-required=\"true\" aria-describedby=\"lastNameHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'glyphicon-ok': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched\"\n                  id=\"lastNameHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"address1InputGroup\" class=\"form-group\">\n        <ng-form name=\"address1FieldForm\">\n          <label for=\"address1Input\">Address 1</label>\n          <input type=\"text\" class=\"form-control\" id=\"address1Input\" name=\"address1\" placeholder=\"Address 1\"\n                 ng-model=\"ctrl.employee.address1\">\n        </ng-form>\n      </div>\n      <div id=\"address2InputGroup\" class=\"form-group\">\n        <ng-form name=\"address2FieldForm\">\n          <label for=\"address2Input\">Address 2</label>\n          <input type=\"text\" class=\"form-control\" id=\"address2Input\" name=\"address2\" placeholder=\"Address 2\"\n                 ng-model=\"ctrl.employee.address2\">\n        </ng-form>\n      </div>\n      <div id=\"cityStateZipBlock\" class=\"flex-row\">\n        <div id=\"cityInputGroup\" class=\"form-group\">\n          <ng-form name=\"cityFieldForm\">\n            <label for=\"cityInput\">City</label>\n            <input type=\"text\" class=\"form-control\" id=\"cityInput\" name=\"city\" placeholder=\"City\"\n                   ng-model=\"ctrl.employee.city\">\n          </ng-form>\n        </div>\n        <div id=\"stateInputGroup\" class=\"form-group\">\n          <ng-form name=\"stateFieldForm\">\n            <label for=\"stateSelect\">State</label>\n            <select id=\"stateSelect\" class=\"form-control\" name=\"state\" ng-model=\"ctrl.employee.state\">\n              <option ng-repeat=\"state in ctrl.usStates\">{{state}}</option>\n            </select>\n          </ng-form>\n        </div>\n        <div id=\"zipCodeInputGroup\" class=\"form-group\">\n          <ng-form name=\"zipCodeFieldForm\">\n            <label for=\"zipCodeInput\">Zip Code</label>\n            <input type=\"number\" min=\"00000\" max=\"99999\" class=\"form-control\" id=\"zipCodeInput\" name=\"zipCode\"\n                   placeholder=\"Zip Code\" ng-model=\"ctrl.employee.zipCode\">\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"emailAndPhoneNumberBlock\" class=\"flex-row\">\n        <div id=\"emailGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'has-success': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}\">\n          <ng-form name=\"emailAddressFieldForm\">\n            <label for=\"emailInput\">Email address <span class=\"asterisk\"></span></label>\n            <input type=\"email\" class=\"form-control\" id=\"emailInput\" name=\"emailAddress\" placeholder=\"Email\"\n                   ng-model=\"ctrl.employee.emailAddress\" ng-required=\"true\" aria-describedby=\"emailHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'glyphicon-ok': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span\n              ng-if=\"form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched\"\n              id=\"emailHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n        <div id=\"phoneGroup\" class=\"form-group\">\n          <ng-form name=\"phoneNumberFieldForm\">\n            <label for=\"phoneInput\">Phone number</label>\n            <input type=\"tel\" class=\"form-control\" id=\"phoneInput\" name=\"phoneNumber\" placeholder=\"Phone Number\"\n                   ng-model=\"ctrl.employee.phoneNumber\">\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"positionAndDateHiredBlock\" class=\"flex-row\">\n        <div id=\"positionCategoryGroup\" class=\"form-group\">\n          <ng-form name=\"positionCategoryFieldForm\">\n            <label for=\"positionCategorySelect\">Position Category</label>\n            <select id=\"positionCategorySelect\" class=\"form-control\" name=\"positionCategory\"\n                    ng-model=\"ctrl.employee.positionCategory\">\n              <option>Indirect</option>\n              <option>Direct</option>\n              <option>Program Manager</option>\n              <option>Director</option>\n              <option>Executive</option>\n            </select>\n          </ng-form>\n        </div>\n        <div id=\"dateHiredGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'has-success': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}\">\n          <ng-form name=\"dateHiredFieldForm\">\n            <label for=\"dateHiredInput\">Date Hired <span class=\"asterisk\"></span></label>\n            <p class=\"input-group\">\n              <input id=\"dateHiredInput\"\n                     type=\"text\"\n                     class=\"form-control\"\n                     uib-datepicker-popup=\"{{format}}\"\n                     name=\"dateHired\"\n                     ng-model=\"ctrl.employee.dateHired\"\n                     is-open=\"ctrl.datepicker.open\"\n                     datepicker-options=\"ctrl.datepicker.options\"\n                     ng-required=\"true\"\n                     close-text=\"Close\"\n                     alt-input-formats=\"altInputFormats\"\n                     popup-placement=\"\"\n                     aria-describedby=\"dateHiredHelpBlock\"/>\n            <span class=\"input-group-btn\">\n              <button type=\"button\" class=\"btn btn-default\" ng-click=\"ctrl.openDatepicker()\">\n                <i class=\"glyphicon glyphicon-calendar\"></i>\n              </button>\n            </span>\n            </p>\n            <span\n              ng-class=\"{'glyphicon-remove': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'glyphicon-ok': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched\"\n                  id=\"dateHiredHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n      </div>\n      <div>\n        <div class=\"checkbox\">\n          <label for=\"activeFlagCheckbox\">\n            <input type=\"checkbox\" id=\"activeFlagCheckbox\" name=\"activeFlag\" ng-model=\"ctrl.employee.activeFlag\"\n                   ng-required=\"true\">\n            Active Employee? <span class=\"asterisk\"></span>\n          </label>\n        </div>\n      </div>\n      <label>Fields with <span class=\"asterisk\"></span> are required.</label>\n    </form>\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ctrl.ok()\"\n            ng-disabled=\"form.$pristine || form.firstNameFieldForm.firstName.$invalid || form.lastNameFieldForm.lastName.$invalid || form.emailAddressFieldForm.emailAddress.$invalid || form.dateHiredFieldForm.dateHired.$invalid\">\n      OK\n    </button>\n    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"ctrl.cancel()\">Cancel</button>\n  </div>\n</div>"
+
+/***/ },
+
+/***/ 336:
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = [{ name: 'ALABAMA', abbreviation: 'AL' }, { name: 'ALASKA', abbreviation: 'AK' }, { name: 'AMERICAN SAMOA', abbreviation: 'AS' }, { name: 'ARIZONA', abbreviation: 'AZ' }, { name: 'ARKANSAS', abbreviation: 'AR' }, { name: 'CALIFORNIA', abbreviation: 'CA' }, { name: 'COLORADO', abbreviation: 'CO' }, { name: 'CONNECTICUT', abbreviation: 'CT' }, { name: 'DELAWARE', abbreviation: 'DE' }, { name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC' }, { name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM' }, { name: 'FLORIDA', abbreviation: 'FL' }, { name: 'GEORGIA', abbreviation: 'GA' }, { name: 'GUAM', abbreviation: 'GU' }, { name: 'HAWAII', abbreviation: 'HI' }, { name: 'IDAHO', abbreviation: 'ID' }, { name: 'ILLINOIS', abbreviation: 'IL' }, { name: 'INDIANA', abbreviation: 'IN' }, { name: 'IOWA', abbreviation: 'IA' }, { name: 'KANSAS', abbreviation: 'KS' }, { name: 'KENTUCKY', abbreviation: 'KY' }, { name: 'LOUISIANA', abbreviation: 'LA' }, { name: 'MAINE', abbreviation: 'ME' }, { name: 'MARSHALL ISLANDS', abbreviation: 'MH' }, { name: 'MARYLAND', abbreviation: 'MD' }, { name: 'MASSACHUSETTS', abbreviation: 'MA' }, { name: 'MICHIGAN', abbreviation: 'MI' }, { name: 'MINNESOTA', abbreviation: 'MN' }, { name: 'MISSISSIPPI', abbreviation: 'MS' }, { name: 'MISSOURI', abbreviation: 'MO' }, { name: 'MONTANA', abbreviation: 'MT' }, { name: 'NEBRASKA', abbreviation: 'NE' }, { name: 'NEVADA', abbreviation: 'NV' }, { name: 'NEW HAMPSHIRE', abbreviation: 'NH' }, { name: 'NEW JERSEY', abbreviation: 'NJ' }, { name: 'NEW MEXICO', abbreviation: 'NM' }, { name: 'NEW YORK', abbreviation: 'NY' }, { name: 'NORTH CAROLINA', abbreviation: 'NC' }, { name: 'NORTH DAKOTA', abbreviation: 'ND' }, { name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP' }, { name: 'OHIO', abbreviation: 'OH' }, { name: 'OKLAHOMA', abbreviation: 'OK' }, { name: 'OREGON', abbreviation: 'OR' }, { name: 'PALAU', abbreviation: 'PW' }, { name: 'PENNSYLVANIA', abbreviation: 'PA' }, { name: 'PUERTO RICO', abbreviation: 'PR' }, { name: 'RHODE ISLAND', abbreviation: 'RI' }, { name: 'SOUTH CAROLINA', abbreviation: 'SC' }, { name: 'SOUTH DAKOTA', abbreviation: 'SD' }, { name: 'TENNESSEE', abbreviation: 'TN' }, { name: 'TEXAS', abbreviation: 'TX' }, { name: 'UTAH', abbreviation: 'UT' }, { name: 'VERMONT', abbreviation: 'VT' }, { name: 'VIRGIN ISLANDS', abbreviation: 'VI' }, { name: 'VIRGINIA', abbreviation: 'VA' }, { name: 'WASHINGTON', abbreviation: 'WA' }, { name: 'WEST VIRGINIA', abbreviation: 'WV' }, { name: 'WISCONSIN', abbreviation: 'WI' }, { name: 'WYOMING', abbreviation: 'WY' }];
+
+/***/ },
+
+/***/ 337:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"mainComponent\" ng-cloak>\n  <h1>Employee Tracking</h1>\n  <div class=\"panel panel-default\">\n    <!-- Default panel contents -->\n    <div class=\"panel-heading space-between\">\n      <div>Employees</div>\n      <button id=\"add-employee-btn\" ng-click=\"ctrl.addEmployee()\" class=\"btn btn-sm btn-primary flex-row\">\n        <span class=\"glyphicon glyphicon-plus-sign\"></span>\n        <div>Add an employee</div>\n      </button>\n    </div>\n\n    <table class=\"table table-striped\">\n      <thead>\n      <tr>\n        <th>#</th>\n        <th>First Name</th>\n        <th>Middle Initial</th>\n        <th>Last Name</th>\n        <th>Email Address</th>\n        <th>Phone Number</th>\n        <th>Position Category</th>\n        <th>Date Hired</th>\n        <th>Address</th>\n        <th>Active</th>\n        <th></th>\n      </tr>\n      </thead>\n      <tbody>\n      <tr ng-repeat=\"employee in ctrl.employees\">\n        <td><strong>{{ $index + 1}}</strong></td>\n        <td>{{ employee.firstName }}</td>\n        <td>{{ employee.middleInitial }}</td>\n        <td>{{ employee.lastName }}</td>\n        <td>{{ employee.emailAddress }}</td>\n        <td>{{ employee.phoneNumber | telephone : 'format'}}</td>\n        <td>{{ employee.positionCategory }}</td>\n        <td>{{ employee.dateHired | date : 'mediumDate' }}</td>\n        <td>\n          <div class=\"flex-column\">\n            <div>{{ employee.address1 }}</div>\n            <div>{{ employee.address2 }}</div>\n            <div>{{ employee.city }}, {{ employee.state }}</div>\n            <div>{{ employee.zipCode }}</div>\n          </div>\n        </td>\n        <td>{{ employee.activeFlag }}</td>\n        <td>\n          <div class=\"flex-row\">\n            <span class=\"glyphicon glyphicon-edit\" ng-click=\"ctrl.editEmployee($index)\"></span>\n            <span class=\"glyphicon glyphicon-trash\" ng-click=\"ctrl.deleteEmployee($index)\"></span>\n          </div>\n        </td>\n      </tr>\n      </tbody>\n    </table>\n  </div>\n</div>"
 
 /***/ }
 

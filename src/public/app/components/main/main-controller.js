@@ -1,61 +1,67 @@
+import Employee from '../../models/Employee';
+
 export default function mainController($scope, employeeModalService, apiService) {
   'ngInject';
 
   const self = this;
 
-  // self.employees = [{
-  //   firstName: 'Jonathan', // - Text (*)
-  //   lastName: 'Aaron', // - Text (*)
-  //   middleInitial: 'R', // – Text
-  //   emailAddress: 'jon.r.aaron@gmail.com', // - Text (validate emails only) (*)
-  //   phoneNumber: '4352790073', // - Text (numbers only)
-  //   positionCategory: 'Indirect', // - Drop Down (Indirect, Direct, Program Manager, Director, Executive)
-  //   dateHired: new Date(), // - Date (*)
-  //   address1: '7602 Ranches Pkwy', // – Text
-  //   address2: '', // – Text
-  //   city: 'Eagle Mountain', // – Text
-  //   state: 'Utah', // - Drop Down
-  //   zipCode: 84005, // - Number (5-digit only)
-  //   activeFlag: true // - Boolean(*)
-  // }, {
-  //   firstName: 'Ricky', // - Text (*)
-  //   lastName: 'Harris', // - Text (*)
-  //   middleInitial: 'W', // – Text
-  //   emailAddress: 'jon.r.aaron@gmail.com', // - Text (validate emails only) (*)
-  //   phoneNumber: '4352790073', // - Text (numbers only)
-  //   positionCategory: 'Indirect', // - Drop Down (Indirect, Direct, Program Manager, Director, Executive)
-  //   dateHired: new Date(), // - Date (*)
-  //   address1: '7602 Ranches Pkwy', // – Text
-  //   address2: '', // – Text
-  //   city: 'Eagle Mountain', // – Text
-  //   state: 'Utah', // - Drop Down
-  //   zipCode: 84005, // - Number (5-digit only)
-  //   activeFlag: true // - Boolean(*)
-  // }];
-  
   self.employees = [];
-  
+
   self.editEmployee = editEmployee;
+  self.deleteEmployee = deleteEmployee;
   self.addEmployee = addEmployee;
-  
-  apiService.getAllEmployees().then(employees => {
-    self.employees = employees;
-    $scope.$apply();
-  });
-  
-  /**
-   * @function editEmployee
-   * @param index
-   */
-  function editEmployee(index) {
-    console.log('Editing: ', self.employees[index]);
-  }
+
+  apiService.getAllEmployees()
+    .then(employees => {
+      self.employees = employees;
+      $scope.$apply();
+    })
+    .catch(err => {
+      throw Error(err);
+    });
 
   /**
    * @function addEmployee
    */
   function addEmployee() {
-    console.log('Adding an employee');
-    employeeModalService.open();
+    employeeModalService.open(null, 'add')
+      .then(employee => {
+        self.employees.push(employee);
+        $scope.$apply();
+      })
+      .catch(err => {
+        throw Error(err);
+      });
+  }
+
+  /**
+   * @function editEmployee
+   * @param index
+   */
+  function editEmployee(index) {
+    employeeModalService.open(new Employee(self.employees[index]), 'edit')
+      .then(employee => {
+        self.employees[index] = employee;
+        $scope.$apply();
+      })
+      .catch(err => {
+        throw Error(err);
+      });
+  }
+
+  /**
+   * @function deleteEmployee
+   * @param index
+   */
+  function deleteEmployee(index) {
+    employeeModalService.open(self.employees[index], 'delete')
+      .then(deleteResult => {
+        self.employees = self.employees.filter(currentEmployee => {
+          return currentEmployee !== deleteResult.employee;
+        });
+      })
+      .catch(err => {
+        throw Error(err);
+      });
   }
 }

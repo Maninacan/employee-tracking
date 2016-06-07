@@ -1,4 +1,4 @@
-import roStateService from './roState-service';
+import roStateService from './store-service';
 
 chai.should();
 

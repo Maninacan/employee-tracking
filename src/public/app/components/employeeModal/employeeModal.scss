@@ -3,16 +3,22 @@
   #nameBlock {
     justify-content: space-between;
     #firstNameInputGroup, #lastNameInputGroup {
-      width: calc(50% - 60px);
+      width: calc(50% - 70px);
     }
     #middleInitialInputGroup {
       width: 120px;
     }
   }
-  #positionAndDateHiredBlock {
+  #emailAndPhoneNumberBlock, #positionAndDateHiredBlock {
     justify-content: space-between;
-    #positionCategoryGroup, #dateHiredGroup {
-      width: calc(50% - 10px);
+    #positionCategoryGroup, #dateHiredGroup, #emailGroup, #phoneGroup {
+      width: calc(50% - 5px);
+    }
+  }
+  #cityStateZipBlock {
+    justify-content: space-between;
+    #cityInputGroup, #stateInputGroup, #zipCodeInputGroup {
+      width: calc(33% - 5px);
     }
   }
   span.asterisk:after {
