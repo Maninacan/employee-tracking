@@ -59,6 +59,7 @@ export default function mainController($scope, employeeModalService, apiService)
         self.employees = self.employees.filter(currentEmployee => {
           return currentEmployee !== deleteResult.employee;
         });
+        $scope.$apply();
       })
       .catch(err => {
         throw Error(err);
