@@ -1,10 +1,10 @@
-import config from '../../config2.json';
+// import config from '../../config2.json';
 import mongoose from 'mongoose';
 
 mongoose.set('debug', true);
 
-mongoose.connect(`mongodb://${config.dbuser}:${config.dbpassword}@${config.dbinstance}${config.dbpath}`);
-// mongoose.connect(`mongodb://${config.dbuser}:${config.dbpassword}@ds025263.mlab.com:25263/employee-tracking2`);
+mongoose.connect(process.env.MONGODB_URI);
+
 
 const db = mongoose.connection;
 

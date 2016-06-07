@@ -34,7 +34,7 @@ webpackJsonp([0],{
 	
 	var _components2 = _interopRequireDefault(_components);
 	
-	__webpack_require__(318);
+	__webpack_require__(328);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -79,19 +79,19 @@ webpackJsonp([0],{
 	  value: true
 	});
 	
-	var _api = __webpack_require__(327);
+	var _api = __webpack_require__(307);
 	
 	var _api2 = _interopRequireDefault(_api);
 	
-	var _employeeModal = __webpack_require__(307);
+	var _employeeModal = __webpack_require__(310);
 	
 	var _employeeModal2 = _interopRequireDefault(_employeeModal);
 	
-	var _main = __webpack_require__(314);
+	var _main = __webpack_require__(321);
 	
 	var _main2 = _interopRequireDefault(_main);
 	
-	var _telephoneFilter = __webpack_require__(329);
+	var _telephoneFilter = __webpack_require__(326);
 	
 	var _telephoneFilter2 = _interopRequireDefault(_telephoneFilter);
 	
@@ -110,19 +110,176 @@ webpackJsonp([0],{
 	  value: true
 	});
 	
-	var _employeeModalController = __webpack_require__(308);
+	var _apiService = __webpack_require__(308);
+	
+	var _apiService2 = _interopRequireDefault(_apiService);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = angular.module('roApp.components.api', []).factory('apiService', _apiService2.default).name;
+
+/***/ },
+
+/***/ 308:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	apiService.$inject = ["$http"];
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = apiService;
+	
+	var _Employee = __webpack_require__(309);
+	
+	var _Employee2 = _interopRequireDefault(_Employee);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function apiService($http) {
+	  'ngInject';
+	
+	  /**
+	   * @function getAllEmployees
+	   * @returns {*}
+	   */
+	
+	  function getAllEmployees() {
+	    return new Promise(function (resolve, reject) {
+	      $http.get('/api/employee').then(function (response) {
+	        var employees = response.data.map(function (employee) {
+	          employee.dateHired = new Date(employee.dateHired);
+	          return new _Employee2.default(employee);
+	        });
+	        resolve(employees);
+	      }).catch(function (err) {
+	        reject(err);
+	      });
+	    });
+	  }
+	
+	  function addEmployee(employee) {
+	    employee = new _Employee2.default(employee);
+	    return new Promise(function (resolve, reject) {
+	      $http.post('/api/employee', employee).then(function (response) {
+	        resolve(response.data);
+	      }).catch(function (err) {
+	        reject(err);
+	      });
+	    });
+	  }
+	
+	  function editEmployee(employee) {
+	    return new Promise(function (resolve, reject) {
+	      $http.put('/api/employee/' + employee._id, employee).then(function (response) {
+	        resolve(response.data);
+	      }).catch(function (err) {
+	        reject(err);
+	      });
+	    });
+	  }
+	
+	  function deleteEmployee(employee) {
+	    return new Promise(function (resolve, reject) {
+	      $http.delete('/api/employee/' + employee._id).then(function (response) {
+	        resolve(response.data);
+	      }).catch(function (err) {
+	        reject(err);
+	      });
+	    });
+	  }
+	
+	  return {
+	    getAllEmployees: getAllEmployees,
+	    addEmployee: addEmployee,
+	    editEmployee: editEmployee,
+	    deleteEmployee: deleteEmployee
+	  };
+	}
+
+/***/ },
+
+/***/ 309:
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Employee = function Employee(obj) {
+	  _classCallCheck(this, Employee);
+	
+	  this._id = obj._id;
+	
+	  if (obj.firstName) {
+	    this.firstName = obj.firstName;
+	  } else {
+	    throw Error('"firstName" is required');
+	  }
+	
+	  if (obj.lastName) {
+	    this.lastName = obj.lastName;
+	  } else {
+	    throw Error('"lastName" is required');
+	  }
+	
+	  this.middleInitial = obj.middleInitial;
+	
+	  if (obj.emailAddress) {
+	    this.emailAddress = obj.emailAddress;
+	  } else {
+	    throw Error('"emailAddress" is required');
+	  }
+	
+	  this.phoneNumber = obj.phoneNumber;
+	  this.positionCategory = obj.positionCategory;
+	
+	  if (obj.dateHired) {
+	    this.dateHired = obj.dateHired;
+	  } else {
+	    throw Error('"dateHired" is required');
+	  }
+	
+	  this.address1 = obj.address1;
+	  this.address2 = obj.address2;
+	  this.city = obj.city;
+	  this.state = obj.state;
+	  this.zipCode = obj.zipCode;
+	
+	  this.activeFlag = !!obj.activeFlag;
+	};
+	
+	exports.default = Employee;
+
+/***/ },
+
+/***/ 310:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _employeeModalController = __webpack_require__(311);
 	
 	var _employeeModalController2 = _interopRequireDefault(_employeeModalController);
 	
-	var _deleteEmployeeModalController = __webpack_require__(333);
+	var _deleteEmployeeModalController = __webpack_require__(313);
 	
 	var _deleteEmployeeModalController2 = _interopRequireDefault(_deleteEmployeeModalController);
 	
-	var _employeeModalService = __webpack_require__(309);
+	var _employeeModalService = __webpack_require__(314);
 	
 	var _employeeModalService2 = _interopRequireDefault(_employeeModalService);
 	
-	__webpack_require__(310);
+	__webpack_require__(317);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -130,7 +287,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 308:
+/***/ 311:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -141,11 +298,11 @@ webpackJsonp([0],{
 	});
 	exports.default = employeeModalController;
 	
-	var _Employee = __webpack_require__(332);
+	var _Employee = __webpack_require__(309);
 	
 	var _Employee2 = _interopRequireDefault(_Employee);
 	
-	var _usStates = __webpack_require__(336);
+	var _usStates = __webpack_require__(312);
 	
 	var _usStates2 = _interopRequireDefault(_usStates);
 	
@@ -253,7 +410,58 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 309:
+/***/ 312:
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = [{ name: 'ALABAMA', abbreviation: 'AL' }, { name: 'ALASKA', abbreviation: 'AK' }, { name: 'AMERICAN SAMOA', abbreviation: 'AS' }, { name: 'ARIZONA', abbreviation: 'AZ' }, { name: 'ARKANSAS', abbreviation: 'AR' }, { name: 'CALIFORNIA', abbreviation: 'CA' }, { name: 'COLORADO', abbreviation: 'CO' }, { name: 'CONNECTICUT', abbreviation: 'CT' }, { name: 'DELAWARE', abbreviation: 'DE' }, { name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC' }, { name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM' }, { name: 'FLORIDA', abbreviation: 'FL' }, { name: 'GEORGIA', abbreviation: 'GA' }, { name: 'GUAM', abbreviation: 'GU' }, { name: 'HAWAII', abbreviation: 'HI' }, { name: 'IDAHO', abbreviation: 'ID' }, { name: 'ILLINOIS', abbreviation: 'IL' }, { name: 'INDIANA', abbreviation: 'IN' }, { name: 'IOWA', abbreviation: 'IA' }, { name: 'KANSAS', abbreviation: 'KS' }, { name: 'KENTUCKY', abbreviation: 'KY' }, { name: 'LOUISIANA', abbreviation: 'LA' }, { name: 'MAINE', abbreviation: 'ME' }, { name: 'MARSHALL ISLANDS', abbreviation: 'MH' }, { name: 'MARYLAND', abbreviation: 'MD' }, { name: 'MASSACHUSETTS', abbreviation: 'MA' }, { name: 'MICHIGAN', abbreviation: 'MI' }, { name: 'MINNESOTA', abbreviation: 'MN' }, { name: 'MISSISSIPPI', abbreviation: 'MS' }, { name: 'MISSOURI', abbreviation: 'MO' }, { name: 'MONTANA', abbreviation: 'MT' }, { name: 'NEBRASKA', abbreviation: 'NE' }, { name: 'NEVADA', abbreviation: 'NV' }, { name: 'NEW HAMPSHIRE', abbreviation: 'NH' }, { name: 'NEW JERSEY', abbreviation: 'NJ' }, { name: 'NEW MEXICO', abbreviation: 'NM' }, { name: 'NEW YORK', abbreviation: 'NY' }, { name: 'NORTH CAROLINA', abbreviation: 'NC' }, { name: 'NORTH DAKOTA', abbreviation: 'ND' }, { name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP' }, { name: 'OHIO', abbreviation: 'OH' }, { name: 'OKLAHOMA', abbreviation: 'OK' }, { name: 'OREGON', abbreviation: 'OR' }, { name: 'PALAU', abbreviation: 'PW' }, { name: 'PENNSYLVANIA', abbreviation: 'PA' }, { name: 'PUERTO RICO', abbreviation: 'PR' }, { name: 'RHODE ISLAND', abbreviation: 'RI' }, { name: 'SOUTH CAROLINA', abbreviation: 'SC' }, { name: 'SOUTH DAKOTA', abbreviation: 'SD' }, { name: 'TENNESSEE', abbreviation: 'TN' }, { name: 'TEXAS', abbreviation: 'TX' }, { name: 'UTAH', abbreviation: 'UT' }, { name: 'VERMONT', abbreviation: 'VT' }, { name: 'VIRGIN ISLANDS', abbreviation: 'VI' }, { name: 'VIRGINIA', abbreviation: 'VA' }, { name: 'WASHINGTON', abbreviation: 'WA' }, { name: 'WEST VIRGINIA', abbreviation: 'WV' }, { name: 'WISCONSIN', abbreviation: 'WI' }, { name: 'WYOMING', abbreviation: 'WY' }];
+
+/***/ },
+
+/***/ 313:
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	deleteEmployeeModalController.$inject = ["$scope", "$uibModalInstance", "resolveObject"];
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = deleteEmployeeModalController;
+	function deleteEmployeeModalController($scope, $uibModalInstance, resolveObject) {
+	  'ngInject';
+	
+	  var self = this;
+	
+	  self.employee = resolveObject.employee;
+	
+	  self.ok = ok;
+	  self.cancel = cancel;
+	
+	  /**
+	   * @function ok
+	   */
+	  function ok() {
+	    // console.log('submitted: ', self.employee);
+	    $uibModalInstance.close(self.employee);
+	  }
+	
+	  /**
+	   * @function cancel
+	   */
+	  function cancel() {
+	    // console.log('Cancel clicked');
+	    $uibModalInstance.dismiss('cancel');
+	  }
+	}
+
+/***/ },
+
+/***/ 314:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -264,15 +472,15 @@ webpackJsonp([0],{
 	});
 	exports.default = employeeModalService;
 	
-	var _Employee = __webpack_require__(332);
+	var _Employee = __webpack_require__(309);
 	
 	var _Employee2 = _interopRequireDefault(_Employee);
 	
-	var _deleteEmployeeModalTemplate = __webpack_require__(334);
+	var _deleteEmployeeModalTemplate = __webpack_require__(315);
 	
 	var _deleteEmployeeModalTemplate2 = _interopRequireDefault(_deleteEmployeeModalTemplate);
 	
-	var _employeeModalTemplate = __webpack_require__(335);
+	var _employeeModalTemplate = __webpack_require__(316);
 	
 	var _employeeModalTemplate2 = _interopRequireDefault(_employeeModalTemplate);
 	
@@ -363,16 +571,30 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 310:
+/***/ 315:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"employeeModalComponent\" ng-cloak>\n  <div class=\"modal-header\">\n    <h3 class=\"modal-title\">Add employee</h3>\n  </div>\n  <div class=\"modal-body\">\n    <uib-alert type=\"danger\">Are you sure you want to delete the record for {{ctrl.employee.firstName}}?</uib-alert>\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ctrl.cancel()\">No. Don't delete it.</button>\n    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"ctrl.ok()\">Yes. Delete it.</button>\n  </div>\n</div>"
+
+/***/ },
+
+/***/ 316:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"employeeModalComponent\" ng-cloak>\n  <div class=\"modal-header\">\n    <h3 class=\"modal-title\">Add employee</h3>\n  </div>\n  <div class=\"modal-body\">\n    <form name=\"form\" novalidate>\n      <div id=\"nameBlock\" class=\"flex-row\">\n        <div id=\"firstNameInputGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'has-success': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}\">\n          <ng-form name=\"firstNameFieldForm\">\n            <label for=\"firstNameInput\">First Name <span class=\"asterisk\"></span></label>\n            <input type=\"text\" class=\"form-control\" id=\"firstNameInput\" name=\"firstName\" placeholder=\"First Name\"\n                   ng-model=\"ctrl.employee.firstName\" ng-required=\"true\" aria-describedby=\"firstNameHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'glyphicon-ok': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched\"\n                  id=\"firstNameHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n        <div id=\"middleInitialInputGroup\" class=\"form-group\">\n          <ng-form name=\"middleInitialFieldForm\">\n            <label for=\"middleInitialInput\">Middle Initial</label>\n            <input type=\"text\" class=\"form-control\" id=\"middleInitialInput\" name=\"middleInitial\" placeholder=\"M.I.\"\n                   ng-model=\"ctrl.employee.middleInitial\">\n          </ng-form>\n        </div>\n        <div id=\"lastNameInputGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'has-success': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}\">\n          <ng-form name=\"lastNameFieldForm\">\n            <label for=\"lastNameInput\">Last Name <span class=\"asterisk\"></span></label>\n            <input type=\"text\" class=\"form-control\" id=\"lastNameInput\" name=\"lastName\" placeholder=\"Last Name\"\n                   ng-model=\"ctrl.employee.lastName\" ng-required=\"true\" aria-describedby=\"lastNameHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'glyphicon-ok': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched\"\n                  id=\"lastNameHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"address1InputGroup\" class=\"form-group\">\n        <ng-form name=\"address1FieldForm\">\n          <label for=\"address1Input\">Address 1</label>\n          <input type=\"text\" class=\"form-control\" id=\"address1Input\" name=\"address1\" placeholder=\"Address 1\"\n                 ng-model=\"ctrl.employee.address1\">\n        </ng-form>\n      </div>\n      <div id=\"address2InputGroup\" class=\"form-group\">\n        <ng-form name=\"address2FieldForm\">\n          <label for=\"address2Input\">Address 2</label>\n          <input type=\"text\" class=\"form-control\" id=\"address2Input\" name=\"address2\" placeholder=\"Address 2\"\n                 ng-model=\"ctrl.employee.address2\">\n        </ng-form>\n      </div>\n      <div id=\"cityStateZipBlock\" class=\"flex-row\">\n        <div id=\"cityInputGroup\" class=\"form-group\">\n          <ng-form name=\"cityFieldForm\">\n            <label for=\"cityInput\">City</label>\n            <input type=\"text\" class=\"form-control\" id=\"cityInput\" name=\"city\" placeholder=\"City\"\n                   ng-model=\"ctrl.employee.city\">\n          </ng-form>\n        </div>\n        <div id=\"stateInputGroup\" class=\"form-group\">\n          <ng-form name=\"stateFieldForm\">\n            <label for=\"stateSelect\">State</label>\n            <select id=\"stateSelect\" class=\"form-control\" name=\"state\" ng-model=\"ctrl.employee.state\">\n              <option ng-repeat=\"state in ctrl.usStates\">{{state}}</option>\n            </select>\n          </ng-form>\n        </div>\n        <div id=\"zipCodeInputGroup\" class=\"form-group\">\n          <ng-form name=\"zipCodeFieldForm\">\n            <label for=\"zipCodeInput\">Zip Code</label>\n            <input type=\"number\" min=\"00000\" max=\"99999\" class=\"form-control\" id=\"zipCodeInput\" name=\"zipCode\"\n                   placeholder=\"Zip Code\" ng-model=\"ctrl.employee.zipCode\">\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"emailAndPhoneNumberBlock\" class=\"flex-row\">\n        <div id=\"emailGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'has-success': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}\">\n          <ng-form name=\"emailAddressFieldForm\">\n            <label for=\"emailInput\">Email address <span class=\"asterisk\"></span></label>\n            <input type=\"email\" class=\"form-control\" id=\"emailInput\" name=\"emailAddress\" placeholder=\"Email\"\n                   ng-model=\"ctrl.employee.emailAddress\" ng-required=\"true\" aria-describedby=\"emailHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'glyphicon-ok': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span\n              ng-if=\"form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched\"\n              id=\"emailHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n        <div id=\"phoneGroup\" class=\"form-group\">\n          <ng-form name=\"phoneNumberFieldForm\">\n            <label for=\"phoneInput\">Phone number</label>\n            <input type=\"tel\" class=\"form-control\" id=\"phoneInput\" name=\"phoneNumber\" placeholder=\"Phone Number\"\n                   ng-model=\"ctrl.employee.phoneNumber\">\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"positionAndDateHiredBlock\" class=\"flex-row\">\n        <div id=\"positionCategoryGroup\" class=\"form-group\">\n          <ng-form name=\"positionCategoryFieldForm\">\n            <label for=\"positionCategorySelect\">Position Category</label>\n            <select id=\"positionCategorySelect\" class=\"form-control\" name=\"positionCategory\"\n                    ng-model=\"ctrl.employee.positionCategory\">\n              <option>Indirect</option>\n              <option>Direct</option>\n              <option>Program Manager</option>\n              <option>Director</option>\n              <option>Executive</option>\n            </select>\n          </ng-form>\n        </div>\n        <div id=\"dateHiredGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'has-success': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}\">\n          <ng-form name=\"dateHiredFieldForm\">\n            <label for=\"dateHiredInput\">Date Hired <span class=\"asterisk\"></span></label>\n            <p class=\"input-group\">\n              <input id=\"dateHiredInput\"\n                     type=\"text\"\n                     class=\"form-control\"\n                     uib-datepicker-popup=\"{{format}}\"\n                     name=\"dateHired\"\n                     ng-model=\"ctrl.employee.dateHired\"\n                     is-open=\"ctrl.datepicker.open\"\n                     datepicker-options=\"ctrl.datepicker.options\"\n                     ng-required=\"true\"\n                     close-text=\"Close\"\n                     alt-input-formats=\"altInputFormats\"\n                     popup-placement=\"\"\n                     aria-describedby=\"dateHiredHelpBlock\"/>\n            <span class=\"input-group-btn\">\n              <button type=\"button\" class=\"btn btn-default\" ng-click=\"ctrl.openDatepicker()\">\n                <i class=\"glyphicon glyphicon-calendar\"></i>\n              </button>\n            </span>\n            </p>\n            <span\n              ng-class=\"{'glyphicon-remove': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'glyphicon-ok': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched\"\n                  id=\"dateHiredHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n      </div>\n      <div>\n        <div class=\"checkbox\">\n          <label for=\"activeFlagCheckbox\">\n            <input type=\"checkbox\" id=\"activeFlagCheckbox\" name=\"activeFlag\" ng-model=\"ctrl.employee.activeFlag\"\n                   ng-required=\"true\">\n            Active Employee? <span class=\"asterisk\"></span>\n          </label>\n        </div>\n      </div>\n      <label>Fields with <span class=\"asterisk\"></span> are required.</label>\n    </form>\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ctrl.ok()\"\n            ng-disabled=\"form.$pristine || form.firstNameFieldForm.firstName.$invalid || form.lastNameFieldForm.lastName.$invalid || form.emailAddressFieldForm.emailAddress.$invalid || form.dateHiredFieldForm.dateHired.$invalid\">\n      OK\n    </button>\n    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"ctrl.cancel()\">Cancel</button>\n  </div>\n</div>"
+
+/***/ },
+
+/***/ 317:
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(311);
+	var content = __webpack_require__(318);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(313)(content, {});
+	var update = __webpack_require__(320)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -390,10 +612,10 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 311:
+/***/ 318:
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(312)();
+	exports = module.exports = __webpack_require__(319)();
 	// imports
 	
 	
@@ -405,7 +627,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 314:
+/***/ 321:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -414,15 +636,15 @@ webpackJsonp([0],{
 	  value: true
 	});
 	
-	var _mainController = __webpack_require__(315);
+	var _mainController = __webpack_require__(322);
 	
 	var _mainController2 = _interopRequireDefault(_mainController);
 	
-	var _mainTemplate = __webpack_require__(337);
+	var _mainTemplate = __webpack_require__(323);
 	
 	var _mainTemplate2 = _interopRequireDefault(_mainTemplate);
 	
-	__webpack_require__(316);
+	__webpack_require__(324);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -439,7 +661,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 315:
+/***/ 322:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -450,7 +672,7 @@ webpackJsonp([0],{
 	});
 	exports.default = mainController;
 	
-	var _Employee = __webpack_require__(332);
+	var _Employee = __webpack_require__(309);
 	
 	var _Employee2 = _interopRequireDefault(_Employee);
 	
@@ -516,16 +738,23 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 316:
+/***/ 323:
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"mainComponent\" ng-cloak>\n  <h1>Employee Tracking</h1>\n  <div class=\"panel panel-default\">\n    <!-- Default panel contents -->\n    <div class=\"panel-heading space-between\">\n      <div>Employees</div>\n      <button id=\"add-employee-btn\" ng-click=\"ctrl.addEmployee()\" class=\"btn btn-sm btn-primary flex-row\">\n        <span class=\"glyphicon glyphicon-plus-sign\"></span>\n        <div>Add an employee</div>\n      </button>\n    </div>\n\n    <table class=\"table table-striped\">\n      <thead>\n      <tr>\n        <th>#</th>\n        <th>First Name</th>\n        <th>Middle Initial</th>\n        <th>Last Name</th>\n        <th>Email Address</th>\n        <th>Phone Number</th>\n        <th>Position Category</th>\n        <th>Date Hired</th>\n        <th>Address</th>\n        <th>Active</th>\n        <th></th>\n      </tr>\n      </thead>\n      <tbody>\n      <tr ng-repeat=\"employee in ctrl.employees\">\n        <td><strong>{{ $index + 1}}</strong></td>\n        <td>{{ employee.firstName }}</td>\n        <td>{{ employee.middleInitial }}</td>\n        <td>{{ employee.lastName }}</td>\n        <td>{{ employee.emailAddress }}</td>\n        <td>{{ employee.phoneNumber | telephone : 'format'}}</td>\n        <td>{{ employee.positionCategory }}</td>\n        <td>{{ employee.dateHired | date : 'mediumDate' }}</td>\n        <td>\n          <div class=\"flex-column\">\n            <div>{{ employee.address1 }}</div>\n            <div>{{ employee.address2 }}</div>\n            <div>{{ employee.city }}, {{ employee.state }}</div>\n            <div>{{ employee.zipCode }}</div>\n          </div>\n        </td>\n        <td>{{ employee.activeFlag }}</td>\n        <td>\n          <div class=\"flex-row\">\n            <span class=\"glyphicon glyphicon-edit\" ng-click=\"ctrl.editEmployee($index)\"></span>\n            <span class=\"glyphicon glyphicon-trash\" ng-click=\"ctrl.deleteEmployee($index)\"></span>\n          </div>\n        </td>\n      </tr>\n      </tbody>\n    </table>\n  </div>\n</div>"
+
+/***/ },
+
+/***/ 324:
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(317);
+	var content = __webpack_require__(325);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(313)(content, {});
+	var update = __webpack_require__(320)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -543,10 +772,10 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 317:
+/***/ 325:
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(312)();
+	exports = module.exports = __webpack_require__(319)();
 	// imports
 	
 	
@@ -558,50 +787,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 318:
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(319);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(313)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./app.scss", function() {
-				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./app.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-
-/***/ 319:
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(312)();
-	// imports
-	exports.i(__webpack_require__(320), "");
-	exports.i(__webpack_require__(326), "");
-	
-	// module
-	exports.push([module.id, "/*! normalize.css v3.0.0 | MIT License | git.io/normalize */\nhtml {\n  font-family: sans-serif;\n  /* 1 */\n  -ms-text-size-adjust: 100%;\n  /* 2 */\n  -webkit-text-size-adjust: 100%;\n  /* 2 */ }\n\nbody {\n  margin: 0; }\n\n/* HTML5 display definitions\n   ========================================================================== */\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nnav,\nsection,\nsummary {\n  display: block; }\n\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block;\n  /* 1 */\n  vertical-align: baseline;\n  /* 2 */ }\n\naudio:not([controls]) {\n  display: none;\n  height: 0; }\n\n[hidden],\ntemplate {\n  display: none; }\n\n/* Links\n   ========================================================================== */\na {\n  background: transparent; }\n\na:active,\na:hover {\n  outline: 0; }\n\n/* Text-level semantics\n   ========================================================================== */\nabbr[title] {\n  border-bottom: 1px dotted; }\n\nb,\nstrong {\n  font-weight: bold; }\n\ndfn {\n  font-style: italic; }\n\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0; }\n\nmark {\n  background: #ff0;\n  color: #000; }\n\nsmall {\n  font-size: 80%; }\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline; }\n\nsup {\n  top: -0.5em; }\n\nsub {\n  bottom: -0.25em; }\n\n/* Embedded content\n   ========================================================================== */\nimg {\n  border: 0; }\n\nsvg:not(:root) {\n  overflow: hidden; }\n\n/* Grouping content\n   ========================================================================== */\nfigure {\n  margin: 1em 40px; }\n\nhr {\n  -moz-box-sizing: content-box;\n  box-sizing: content-box;\n  height: 0; }\n\npre {\n  overflow: auto; }\n\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em; }\n\n/* Forms\n   ========================================================================== */\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  color: inherit;\n  /* 1 */\n  font: inherit;\n  /* 2 */\n  margin: 0;\n  /* 3 */ }\n\nbutton {\n  overflow: visible; }\n\nbutton,\nselect {\n  text-transform: none; }\n\nbutton,\nhtml input[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  -webkit-appearance: button;\n  /* 2 */\n  cursor: pointer;\n  /* 3 */ }\n\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default; }\n\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  border: 0;\n  padding: 0; }\n\ninput {\n  line-height: normal; }\n\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  box-sizing: border-box;\n  /* 1 */\n  padding: 0;\n  /* 2 */ }\n\ninput[type=\"number\"]::-webkit-inner-spin-button,\ninput[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto; }\n\ninput[type=\"search\"] {\n  -webkit-appearance: textfield;\n  /* 1 */\n  -moz-box-sizing: content-box;\n  -webkit-box-sizing: content-box;\n  /* 2 */\n  box-sizing: content-box; }\n\ninput[type=\"search\"]::-webkit-search-cancel-button,\ninput[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none; }\n\nfieldset {\n  border: 1px solid #c0c0c0;\n  margin: 0 2px;\n  padding: 0.35em 0.625em 0.75em; }\n\nlegend {\n  border: 0;\n  /* 1 */\n  padding: 0;\n  /* 2 */ }\n\ntextarea {\n  overflow: auto; }\n\noptgroup {\n  font-weight: bold; }\n\n/* Tables ========================================================================== */\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd,\nth {\n  padding: 0; }\n\n*, *:before, *:after {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box; }\n\n.awesome {\n  color: #fff;\n  background-color: #111111; }\n\nbody {\n  background: #fff;\n  position: absolute; }\n\nbody, html {\n  height: 100%;\n  width: 100%; }\n\n/* Always provide a class along with the tag declarations\n    for styles makes reuse much easier, and your code\n    more modular */\nh1, .heading {\n  color: #404040;\n  font-size: 56px;\n  padding-left: 10px;\n  margin: 0; }\n\nh2 {\n  color: #404040;\n  font-size: 45px;\n  padding-left: 10px;\n  margin: 0; }\n\n.button, input[type=\"button\"] {\n  margin-top: 10px; }\n\n.menu {\n  list-style: none;\n  border-bottom: 0.1em solid black;\n  margin-bottom: 2em;\n  padding: 0 0 0.5em; }\n\n.menu li {\n  display: inline; }\n\n.users {\n  list-style-type: none;\n  padding-left: 10px;\n  font-size: 18px; }\n\n.users input {\n  display: block;\n  font-size: 18px;\n  height: 30px;\n  margin: 5px 0; }\n\n/*  These are additive media queries... meaning\nthat they override the base styles as needed.\nThe accepted base is mobile size screens, you\nthen override the styles needed to make things\nmore usable as the screen size grows.\n\nIt should be noted that if you are using media\nto load background images then you want to\nbracket them. Meaning, that you would use a\nmax-width to include them in addition to a\nmin-width to override them. This prevents double\nloading across browsers.\n*/\n@media (min-width: 45em) {\n  body {\n    background: #fff; } }\n\n@media (min-width: 65em) {\n  body {\n    background: #fff; } }\n\n.clearfix {\n  zoom: 1; }\n  .clearfix:before, .clearfix:after {\n    content: \"\";\n    display: table; }\n  .clearfix:after {\n    clear: both; }\n\n.block {\n  display: block; }\n\n.flex-row, .space-between, .space-around, .flex-end {\n  display: flex;\n  flex-direction: row; }\n\n.flex-column {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start; }\n\n.space-between {\n  justify-content: space-between; }\n\n.space-around {\n  justify-content: space-around; }\n\n.flex-end {\n  justify-content: flex-end; }\n", ""]);
-	
-	// exports
-
-
-/***/ },
-
-/***/ 327:
+/***/ 326:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -610,106 +796,7 @@ webpackJsonp([0],{
 	  value: true
 	});
 	
-	var _apiService = __webpack_require__(328);
-	
-	var _apiService2 = _interopRequireDefault(_apiService);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = angular.module('roApp.components.api', []).factory('apiService', _apiService2.default).name;
-
-/***/ },
-
-/***/ 328:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	apiService.$inject = ["$http"];
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = apiService;
-	
-	var _Employee = __webpack_require__(332);
-	
-	var _Employee2 = _interopRequireDefault(_Employee);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function apiService($http) {
-	  'ngInject';
-	
-	  /**
-	   * @function getAllEmployees
-	   * @returns {*}
-	   */
-	
-	  function getAllEmployees() {
-	    return new Promise(function (resolve, reject) {
-	      $http.get('/api/employee').then(function (response) {
-	        var employees = response.data.map(function (employee) {
-	          employee.dateHired = new Date(employee.dateHired);
-	          return new _Employee2.default(employee);
-	        });
-	        resolve(employees);
-	      }).catch(function (err) {
-	        reject(err);
-	      });
-	    });
-	  }
-	
-	  function addEmployee(employee) {
-	    employee = new _Employee2.default(employee);
-	    return new Promise(function (resolve, reject) {
-	      $http.post('/api/employee', employee).then(function (response) {
-	        resolve(response.data);
-	      }).catch(function (err) {
-	        reject(err);
-	      });
-	    });
-	  }
-	
-	  function editEmployee(employee) {
-	    return new Promise(function (resolve, reject) {
-	      $http.put('/api/employee/' + employee._id, employee).then(function (response) {
-	        resolve(response.data);
-	      }).catch(function (err) {
-	        reject(err);
-	      });
-	    });
-	  }
-	
-	  function deleteEmployee(employee) {
-	    return new Promise(function (resolve, reject) {
-	      $http.delete('/api/employee/' + employee._id).then(function (response) {
-	        resolve(response.data);
-	      }).catch(function (err) {
-	        reject(err);
-	      });
-	    });
-	  }
-	
-	  return {
-	    getAllEmployees: getAllEmployees,
-	    addEmployee: addEmployee,
-	    editEmployee: editEmployee,
-	    deleteEmployee: deleteEmployee
-	  };
-	}
-
-/***/ },
-
-/***/ 329:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _telephoneFilter = __webpack_require__(330);
+	var _telephoneFilter = __webpack_require__(327);
 	
 	var _telephoneFilter2 = _interopRequireDefault(_telephoneFilter);
 	
@@ -719,7 +806,7 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 330:
+/***/ 327:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -820,133 +907,46 @@ webpackJsonp([0],{
 
 /***/ },
 
-/***/ 332:
-/***/ function(module, exports) {
+/***/ 328:
+/***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Employee = function Employee(obj) {
-	  _classCallCheck(this, Employee);
-	
-	  this._id = obj._id;
-	
-	  if (obj.firstName) {
-	    this.firstName = obj.firstName;
-	  } else {
-	    throw Error('"firstName" is required');
-	  }
-	
-	  if (obj.lastName) {
-	    this.lastName = obj.lastName;
-	  } else {
-	    throw Error('"lastName" is required');
-	  }
-	
-	  this.middleInitial = obj.middleInitial;
-	
-	  if (obj.emailAddress) {
-	    this.emailAddress = obj.emailAddress;
-	  } else {
-	    throw Error('"emailAddress" is required');
-	  }
-	
-	  this.phoneNumber = obj.phoneNumber;
-	  this.positionCategory = obj.positionCategory;
-	
-	  if (obj.dateHired) {
-	    this.dateHired = obj.dateHired;
-	  } else {
-	    throw Error('"dateHired" is required');
-	  }
-	
-	  this.address1 = obj.address1;
-	  this.address2 = obj.address2;
-	  this.city = obj.city;
-	  this.state = obj.state;
-	  this.zipCode = obj.zipCode;
-	
-	  this.activeFlag = !!obj.activeFlag;
-	};
-	
-	exports.default = Employee;
-
-/***/ },
-
-/***/ 333:
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	deleteEmployeeModalController.$inject = ["$scope", "$uibModalInstance", "resolveObject"];
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = deleteEmployeeModalController;
-	function deleteEmployeeModalController($scope, $uibModalInstance, resolveObject) {
-	  'ngInject';
-	
-	  var self = this;
-	
-	  self.employee = resolveObject.employee;
-	
-	  self.ok = ok;
-	  self.cancel = cancel;
-	
-	  /**
-	   * @function ok
-	   */
-	  function ok() {
-	    // console.log('submitted: ', self.employee);
-	    $uibModalInstance.close(self.employee);
-	  }
-	
-	  /**
-	   * @function cancel
-	   */
-	  function cancel() {
-	    // console.log('Cancel clicked');
-	    $uibModalInstance.dismiss('cancel');
-	  }
+	// load the styles
+	var content = __webpack_require__(329);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(320)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./app.scss", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/index.js!./app.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
 	}
 
 /***/ },
 
-/***/ 334:
-/***/ function(module, exports) {
+/***/ 329:
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<div class=\"employeeModalComponent\" ng-cloak>\n  <div class=\"modal-header\">\n    <h3 class=\"modal-title\">Add employee</h3>\n  </div>\n  <div class=\"modal-body\">\n    <uib-alert type=\"danger\">Are you sure you want to delete the record for {{ctrl.employee.firstName}}?</uib-alert>\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ctrl.cancel()\">No. Don't delete it.</button>\n    <button class=\"btn btn-danger\" type=\"button\" ng-click=\"ctrl.ok()\">Yes. Delete it.</button>\n  </div>\n</div>"
-
-/***/ },
-
-/***/ 335:
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"employeeModalComponent\" ng-cloak>\n  <div class=\"modal-header\">\n    <h3 class=\"modal-title\">Add employee</h3>\n  </div>\n  <div class=\"modal-body\">\n    <form name=\"form\" novalidate>\n      <div id=\"nameBlock\" class=\"flex-row\">\n        <div id=\"firstNameInputGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'has-success': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}\">\n          <ng-form name=\"firstNameFieldForm\">\n            <label for=\"firstNameInput\">First Name <span class=\"asterisk\"></span></label>\n            <input type=\"text\" class=\"form-control\" id=\"firstNameInput\" name=\"firstName\" placeholder=\"First Name\"\n                   ng-model=\"ctrl.employee.firstName\" ng-required=\"true\" aria-describedby=\"firstNameHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched, 'glyphicon-ok': form.firstNameFieldForm.firstName.$valid && form.firstNameFieldForm.firstName.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.firstNameFieldForm.firstName.$invalid && form.firstNameFieldForm.firstName.$touched\"\n                  id=\"firstNameHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n        <div id=\"middleInitialInputGroup\" class=\"form-group\">\n          <ng-form name=\"middleInitialFieldForm\">\n            <label for=\"middleInitialInput\">Middle Initial</label>\n            <input type=\"text\" class=\"form-control\" id=\"middleInitialInput\" name=\"middleInitial\" placeholder=\"M.I.\"\n                   ng-model=\"ctrl.employee.middleInitial\">\n          </ng-form>\n        </div>\n        <div id=\"lastNameInputGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'has-success': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}\">\n          <ng-form name=\"lastNameFieldForm\">\n            <label for=\"lastNameInput\">Last Name <span class=\"asterisk\"></span></label>\n            <input type=\"text\" class=\"form-control\" id=\"lastNameInput\" name=\"lastName\" placeholder=\"Last Name\"\n                   ng-model=\"ctrl.employee.lastName\" ng-required=\"true\" aria-describedby=\"lastNameHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched, 'glyphicon-ok': form.lastNameFieldForm.lastName.$valid && form.lastNameFieldForm.lastName.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.lastNameFieldForm.lastName.$invalid && form.lastNameFieldForm.lastName.$touched\"\n                  id=\"lastNameHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"address1InputGroup\" class=\"form-group\">\n        <ng-form name=\"address1FieldForm\">\n          <label for=\"address1Input\">Address 1</label>\n          <input type=\"text\" class=\"form-control\" id=\"address1Input\" name=\"address1\" placeholder=\"Address 1\"\n                 ng-model=\"ctrl.employee.address1\">\n        </ng-form>\n      </div>\n      <div id=\"address2InputGroup\" class=\"form-group\">\n        <ng-form name=\"address2FieldForm\">\n          <label for=\"address2Input\">Address 2</label>\n          <input type=\"text\" class=\"form-control\" id=\"address2Input\" name=\"address2\" placeholder=\"Address 2\"\n                 ng-model=\"ctrl.employee.address2\">\n        </ng-form>\n      </div>\n      <div id=\"cityStateZipBlock\" class=\"flex-row\">\n        <div id=\"cityInputGroup\" class=\"form-group\">\n          <ng-form name=\"cityFieldForm\">\n            <label for=\"cityInput\">City</label>\n            <input type=\"text\" class=\"form-control\" id=\"cityInput\" name=\"city\" placeholder=\"City\"\n                   ng-model=\"ctrl.employee.city\">\n          </ng-form>\n        </div>\n        <div id=\"stateInputGroup\" class=\"form-group\">\n          <ng-form name=\"stateFieldForm\">\n            <label for=\"stateSelect\">State</label>\n            <select id=\"stateSelect\" class=\"form-control\" name=\"state\" ng-model=\"ctrl.employee.state\">\n              <option ng-repeat=\"state in ctrl.usStates\">{{state}}</option>\n            </select>\n          </ng-form>\n        </div>\n        <div id=\"zipCodeInputGroup\" class=\"form-group\">\n          <ng-form name=\"zipCodeFieldForm\">\n            <label for=\"zipCodeInput\">Zip Code</label>\n            <input type=\"number\" min=\"00000\" max=\"99999\" class=\"form-control\" id=\"zipCodeInput\" name=\"zipCode\"\n                   placeholder=\"Zip Code\" ng-model=\"ctrl.employee.zipCode\">\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"emailAndPhoneNumberBlock\" class=\"flex-row\">\n        <div id=\"emailGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'has-success': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}\">\n          <ng-form name=\"emailAddressFieldForm\">\n            <label for=\"emailInput\">Email address <span class=\"asterisk\"></span></label>\n            <input type=\"email\" class=\"form-control\" id=\"emailInput\" name=\"emailAddress\" placeholder=\"Email\"\n                   ng-model=\"ctrl.employee.emailAddress\" ng-required=\"true\" aria-describedby=\"emailHelpBlock\">\n            <span\n              ng-class=\"{'glyphicon-remove': form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched, 'glyphicon-ok': form.emailAddressFieldForm.emailAddress.$valid && form.emailAddressFieldForm.emailAddress.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span\n              ng-if=\"form.emailAddressFieldForm.emailAddress.$invalid && form.emailAddressFieldForm.emailAddress.$touched\"\n              id=\"emailHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n        <div id=\"phoneGroup\" class=\"form-group\">\n          <ng-form name=\"phoneNumberFieldForm\">\n            <label for=\"phoneInput\">Phone number</label>\n            <input type=\"tel\" class=\"form-control\" id=\"phoneInput\" name=\"phoneNumber\" placeholder=\"Phone Number\"\n                   ng-model=\"ctrl.employee.phoneNumber\">\n          </ng-form>\n        </div>\n      </div>\n      <div id=\"positionAndDateHiredBlock\" class=\"flex-row\">\n        <div id=\"positionCategoryGroup\" class=\"form-group\">\n          <ng-form name=\"positionCategoryFieldForm\">\n            <label for=\"positionCategorySelect\">Position Category</label>\n            <select id=\"positionCategorySelect\" class=\"form-control\" name=\"positionCategory\"\n                    ng-model=\"ctrl.employee.positionCategory\">\n              <option>Indirect</option>\n              <option>Direct</option>\n              <option>Program Manager</option>\n              <option>Director</option>\n              <option>Executive</option>\n            </select>\n          </ng-form>\n        </div>\n        <div id=\"dateHiredGroup\" class=\"form-group has-feedback\"\n             ng-class=\"{'has-error': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'has-success': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}\">\n          <ng-form name=\"dateHiredFieldForm\">\n            <label for=\"dateHiredInput\">Date Hired <span class=\"asterisk\"></span></label>\n            <p class=\"input-group\">\n              <input id=\"dateHiredInput\"\n                     type=\"text\"\n                     class=\"form-control\"\n                     uib-datepicker-popup=\"{{format}}\"\n                     name=\"dateHired\"\n                     ng-model=\"ctrl.employee.dateHired\"\n                     is-open=\"ctrl.datepicker.open\"\n                     datepicker-options=\"ctrl.datepicker.options\"\n                     ng-required=\"true\"\n                     close-text=\"Close\"\n                     alt-input-formats=\"altInputFormats\"\n                     popup-placement=\"\"\n                     aria-describedby=\"dateHiredHelpBlock\"/>\n            <span class=\"input-group-btn\">\n              <button type=\"button\" class=\"btn btn-default\" ng-click=\"ctrl.openDatepicker()\">\n                <i class=\"glyphicon glyphicon-calendar\"></i>\n              </button>\n            </span>\n            </p>\n            <span\n              ng-class=\"{'glyphicon-remove': form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched, 'glyphicon-ok': form.dateHiredFieldForm.dateHired.$valid && form.dateHiredFieldForm.dateHired.$touched}\"\n              class=\"glyphicon form-control-feedback\" aria-hidden=\"true\"></span>\n            <span ng-if=\"form.dateHiredFieldForm.dateHired.$invalid && form.dateHiredFieldForm.dateHired.$touched\"\n                  id=\"dateHiredHelpBlock\" class=\"help-block\">This field is required.</span>\n          </ng-form>\n        </div>\n      </div>\n      <div>\n        <div class=\"checkbox\">\n          <label for=\"activeFlagCheckbox\">\n            <input type=\"checkbox\" id=\"activeFlagCheckbox\" name=\"activeFlag\" ng-model=\"ctrl.employee.activeFlag\"\n                   ng-required=\"true\">\n            Active Employee? <span class=\"asterisk\"></span>\n          </label>\n        </div>\n      </div>\n      <label>Fields with <span class=\"asterisk\"></span> are required.</label>\n    </form>\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ctrl.ok()\"\n            ng-disabled=\"form.$pristine || form.firstNameFieldForm.firstName.$invalid || form.lastNameFieldForm.lastName.$invalid || form.emailAddressFieldForm.emailAddress.$invalid || form.dateHiredFieldForm.dateHired.$invalid\">\n      OK\n    </button>\n    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"ctrl.cancel()\">Cancel</button>\n  </div>\n</div>"
-
-/***/ },
-
-/***/ 336:
-/***/ function(module, exports) {
-
-	'use strict';
+	exports = module.exports = __webpack_require__(319)();
+	// imports
+	exports.i(__webpack_require__(330), "");
+	exports.i(__webpack_require__(336), "");
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = [{ name: 'ALABAMA', abbreviation: 'AL' }, { name: 'ALASKA', abbreviation: 'AK' }, { name: 'AMERICAN SAMOA', abbreviation: 'AS' }, { name: 'ARIZONA', abbreviation: 'AZ' }, { name: 'ARKANSAS', abbreviation: 'AR' }, { name: 'CALIFORNIA', abbreviation: 'CA' }, { name: 'COLORADO', abbreviation: 'CO' }, { name: 'CONNECTICUT', abbreviation: 'CT' }, { name: 'DELAWARE', abbreviation: 'DE' }, { name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC' }, { name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM' }, { name: 'FLORIDA', abbreviation: 'FL' }, { name: 'GEORGIA', abbreviation: 'GA' }, { name: 'GUAM', abbreviation: 'GU' }, { name: 'HAWAII', abbreviation: 'HI' }, { name: 'IDAHO', abbreviation: 'ID' }, { name: 'ILLINOIS', abbreviation: 'IL' }, { name: 'INDIANA', abbreviation: 'IN' }, { name: 'IOWA', abbreviation: 'IA' }, { name: 'KANSAS', abbreviation: 'KS' }, { name: 'KENTUCKY', abbreviation: 'KY' }, { name: 'LOUISIANA', abbreviation: 'LA' }, { name: 'MAINE', abbreviation: 'ME' }, { name: 'MARSHALL ISLANDS', abbreviation: 'MH' }, { name: 'MARYLAND', abbreviation: 'MD' }, { name: 'MASSACHUSETTS', abbreviation: 'MA' }, { name: 'MICHIGAN', abbreviation: 'MI' }, { name: 'MINNESOTA', abbreviation: 'MN' }, { name: 'MISSISSIPPI', abbreviation: 'MS' }, { name: 'MISSOURI', abbreviation: 'MO' }, { name: 'MONTANA', abbreviation: 'MT' }, { name: 'NEBRASKA', abbreviation: 'NE' }, { name: 'NEVADA', abbreviation: 'NV' }, { name: 'NEW HAMPSHIRE', abbreviation: 'NH' }, { name: 'NEW JERSEY', abbreviation: 'NJ' }, { name: 'NEW MEXICO', abbreviation: 'NM' }, { name: 'NEW YORK', abbreviation: 'NY' }, { name: 'NORTH CAROLINA', abbreviation: 'NC' }, { name: 'NORTH DAKOTA', abbreviation: 'ND' }, { name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP' }, { name: 'OHIO', abbreviation: 'OH' }, { name: 'OKLAHOMA', abbreviation: 'OK' }, { name: 'OREGON', abbreviation: 'OR' }, { name: 'PALAU', abbreviation: 'PW' }, { name: 'PENNSYLVANIA', abbreviation: 'PA' }, { name: 'PUERTO RICO', abbreviation: 'PR' }, { name: 'RHODE ISLAND', abbreviation: 'RI' }, { name: 'SOUTH CAROLINA', abbreviation: 'SC' }, { name: 'SOUTH DAKOTA', abbreviation: 'SD' }, { name: 'TENNESSEE', abbreviation: 'TN' }, { name: 'TEXAS', abbreviation: 'TX' }, { name: 'UTAH', abbreviation: 'UT' }, { name: 'VERMONT', abbreviation: 'VT' }, { name: 'VIRGIN ISLANDS', abbreviation: 'VI' }, { name: 'VIRGINIA', abbreviation: 'VA' }, { name: 'WASHINGTON', abbreviation: 'WA' }, { name: 'WEST VIRGINIA', abbreviation: 'WV' }, { name: 'WISCONSIN', abbreviation: 'WI' }, { name: 'WYOMING', abbreviation: 'WY' }];
+	// module
+	exports.push([module.id, "/*! normalize.css v3.0.0 | MIT License | git.io/normalize */\nhtml {\n  font-family: sans-serif;\n  /* 1 */\n  -ms-text-size-adjust: 100%;\n  /* 2 */\n  -webkit-text-size-adjust: 100%;\n  /* 2 */ }\n\nbody {\n  margin: 0; }\n\n/* HTML5 display definitions\n   ========================================================================== */\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nnav,\nsection,\nsummary {\n  display: block; }\n\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block;\n  /* 1 */\n  vertical-align: baseline;\n  /* 2 */ }\n\naudio:not([controls]) {\n  display: none;\n  height: 0; }\n\n[hidden],\ntemplate {\n  display: none; }\n\n/* Links\n   ========================================================================== */\na {\n  background: transparent; }\n\na:active,\na:hover {\n  outline: 0; }\n\n/* Text-level semantics\n   ========================================================================== */\nabbr[title] {\n  border-bottom: 1px dotted; }\n\nb,\nstrong {\n  font-weight: bold; }\n\ndfn {\n  font-style: italic; }\n\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0; }\n\nmark {\n  background: #ff0;\n  color: #000; }\n\nsmall {\n  font-size: 80%; }\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline; }\n\nsup {\n  top: -0.5em; }\n\nsub {\n  bottom: -0.25em; }\n\n/* Embedded content\n   ========================================================================== */\nimg {\n  border: 0; }\n\nsvg:not(:root) {\n  overflow: hidden; }\n\n/* Grouping content\n   ========================================================================== */\nfigure {\n  margin: 1em 40px; }\n\nhr {\n  -moz-box-sizing: content-box;\n  box-sizing: content-box;\n  height: 0; }\n\npre {\n  overflow: auto; }\n\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em; }\n\n/* Forms\n   ========================================================================== */\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  color: inherit;\n  /* 1 */\n  font: inherit;\n  /* 2 */\n  margin: 0;\n  /* 3 */ }\n\nbutton {\n  overflow: visible; }\n\nbutton,\nselect {\n  text-transform: none; }\n\nbutton,\nhtml input[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  -webkit-appearance: button;\n  /* 2 */\n  cursor: pointer;\n  /* 3 */ }\n\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default; }\n\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  border: 0;\n  padding: 0; }\n\ninput {\n  line-height: normal; }\n\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  box-sizing: border-box;\n  /* 1 */\n  padding: 0;\n  /* 2 */ }\n\ninput[type=\"number\"]::-webkit-inner-spin-button,\ninput[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto; }\n\ninput[type=\"search\"] {\n  -webkit-appearance: textfield;\n  /* 1 */\n  -moz-box-sizing: content-box;\n  -webkit-box-sizing: content-box;\n  /* 2 */\n  box-sizing: content-box; }\n\ninput[type=\"search\"]::-webkit-search-cancel-button,\ninput[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none; }\n\nfieldset {\n  border: 1px solid #c0c0c0;\n  margin: 0 2px;\n  padding: 0.35em 0.625em 0.75em; }\n\nlegend {\n  border: 0;\n  /* 1 */\n  padding: 0;\n  /* 2 */ }\n\ntextarea {\n  overflow: auto; }\n\noptgroup {\n  font-weight: bold; }\n\n/* Tables ========================================================================== */\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\ntd,\nth {\n  padding: 0; }\n\n*, *:before, *:after {\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box; }\n\n.awesome {\n  color: #fff;\n  background-color: #111111; }\n\nbody {\n  background: #fff;\n  position: absolute; }\n\nbody, html {\n  height: 100%;\n  width: 100%; }\n\n/* Always provide a class along with the tag declarations\n    for styles makes reuse much easier, and your code\n    more modular */\nh1, .heading {\n  color: #404040;\n  font-size: 56px;\n  padding-left: 10px;\n  margin: 0; }\n\nh2 {\n  color: #404040;\n  font-size: 45px;\n  padding-left: 10px;\n  margin: 0; }\n\n.button, input[type=\"button\"] {\n  margin-top: 10px; }\n\n.menu {\n  list-style: none;\n  border-bottom: 0.1em solid black;\n  margin-bottom: 2em;\n  padding: 0 0 0.5em; }\n\n.menu li {\n  display: inline; }\n\n.users {\n  list-style-type: none;\n  padding-left: 10px;\n  font-size: 18px; }\n\n.users input {\n  display: block;\n  font-size: 18px;\n  height: 30px;\n  margin: 5px 0; }\n\n/*  These are additive media queries... meaning\nthat they override the base styles as needed.\nThe accepted base is mobile size screens, you\nthen override the styles needed to make things\nmore usable as the screen size grows.\n\nIt should be noted that if you are using media\nto load background images then you want to\nbracket them. Meaning, that you would use a\nmax-width to include them in addition to a\nmin-width to override them. This prevents double\nloading across browsers.\n*/\n@media (min-width: 45em) {\n  body {\n    background: #fff; } }\n\n@media (min-width: 65em) {\n  body {\n    background: #fff; } }\n\n.clearfix {\n  zoom: 1; }\n  .clearfix:before, .clearfix:after {\n    content: \"\";\n    display: table; }\n  .clearfix:after {\n    clear: both; }\n\n.block {\n  display: block; }\n\n.flex-row, .space-between, .space-around, .flex-end {\n  display: flex;\n  flex-direction: row; }\n\n.flex-column {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start; }\n\n.space-between {\n  justify-content: space-between; }\n\n.space-around {\n  justify-content: space-around; }\n\n.flex-end {\n  justify-content: flex-end; }\n", ""]);
+	
+	// exports
 
-/***/ },
-
-/***/ 337:
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"mainComponent\" ng-cloak>\n  <h1>Employee Tracking</h1>\n  <div class=\"panel panel-default\">\n    <!-- Default panel contents -->\n    <div class=\"panel-heading space-between\">\n      <div>Employees</div>\n      <button id=\"add-employee-btn\" ng-click=\"ctrl.addEmployee()\" class=\"btn btn-sm btn-primary flex-row\">\n        <span class=\"glyphicon glyphicon-plus-sign\"></span>\n        <div>Add an employee</div>\n      </button>\n    </div>\n\n    <table class=\"table table-striped\">\n      <thead>\n      <tr>\n        <th>#</th>\n        <th>First Name</th>\n        <th>Middle Initial</th>\n        <th>Last Name</th>\n        <th>Email Address</th>\n        <th>Phone Number</th>\n        <th>Position Category</th>\n        <th>Date Hired</th>\n        <th>Address</th>\n        <th>Active</th>\n        <th></th>\n      </tr>\n      </thead>\n      <tbody>\n      <tr ng-repeat=\"employee in ctrl.employees\">\n        <td><strong>{{ $index + 1}}</strong></td>\n        <td>{{ employee.firstName }}</td>\n        <td>{{ employee.middleInitial }}</td>\n        <td>{{ employee.lastName }}</td>\n        <td>{{ employee.emailAddress }}</td>\n        <td>{{ employee.phoneNumber | telephone : 'format'}}</td>\n        <td>{{ employee.positionCategory }}</td>\n        <td>{{ employee.dateHired | date : 'mediumDate' }}</td>\n        <td>\n          <div class=\"flex-column\">\n            <div>{{ employee.address1 }}</div>\n            <div>{{ employee.address2 }}</div>\n            <div>{{ employee.city }}, {{ employee.state }}</div>\n            <div>{{ employee.zipCode }}</div>\n          </div>\n        </td>\n        <td>{{ employee.activeFlag }}</td>\n        <td>\n          <div class=\"flex-row\">\n            <span class=\"glyphicon glyphicon-edit\" ng-click=\"ctrl.editEmployee($index)\"></span>\n            <span class=\"glyphicon glyphicon-trash\" ng-click=\"ctrl.deleteEmployee($index)\"></span>\n          </div>\n        </td>\n      </tr>\n      </tbody>\n    </table>\n  </div>\n</div>"
 
 /***/ }
 
