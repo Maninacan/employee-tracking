@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 mongoose.set('debug', true);
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect('mongodb://localhost:27017/employeeTracking');
 
 
 const db = mongoose.connection;
@@ -30,4 +30,3 @@ const employeeSchema = mongoose.Schema({
 });
 
 export const Employee = mongoose.model('Employee', employeeSchema);
-

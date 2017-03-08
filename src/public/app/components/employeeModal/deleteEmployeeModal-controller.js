@@ -4,7 +4,7 @@ export default function deleteEmployeeModalController($scope, $uibModalInstance,
   const self = this;
 
   self.employee = resolveObject.employee;
-  
+
   self.ok = ok;
   self.cancel = cancel;
 
